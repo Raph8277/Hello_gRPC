@@ -1,0 +1,48 @@
+﻿@page "/"
+
+<PageTitle>Accueil — Hello gRPC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8">
+    <MudPaper Elevation="2" Class="pa-8 text-center">
+        <MudIcon Icon="@Icons.Material.Filled.People" Size="Size.Large" Color="Color.Primary" Class="mb-4" />
+        <MudText Typo="Typo.h3" Class="mb-2">Hello gRPC</MudText>
+        <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mb-6">
+            Gestion de personnalités célèbres
+        </MudText>
+        <MudText Typo="Typo.body1" Class="mb-6">
+            Application fullstack .NET 9 utilisant gRPC pour la communication,
+            Blazor Server avec MudBlazor pour l'interface, et EF Core SQLite pour la persistance.
+        </MudText>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   Href="/personalities"
+                   StartIcon="@Icons.Material.Filled.ArrowForward">
+            Voir les personnalités
+        </MudButton>
+    </MudPaper>
+
+    <MudGrid Class="mt-6">
+        <MudItem xs="4">
+            <MudPaper Elevation="1" Class="pa-4 text-center">
+                <MudIcon Icon="@Icons.Material.Filled.Storage" Color="Color.Primary" />
+                <MudText Typo="Typo.h6">100</MudText>
+                <MudText Typo="Typo.caption">Personnalités</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="4">
+            <MudPaper Elevation="1" Class="pa-4 text-center">
+                <MudIcon Icon="@Icons.Material.Filled.Category" Color="Color.Secondary" />
+                <MudText Typo="Typo.h6">10</MudText>
+                <MudText Typo="Typo.caption">Catégories</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="4">
+            <MudPaper Elevation="1" Class="pa-4 text-center">
+                <MudIcon Icon="@Icons.Material.Filled.Api" Color="Color.Tertiary" />
+                <MudText Typo="Typo.h6">gRPC</MudText>
+                <MudText Typo="Typo.caption">Communication</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

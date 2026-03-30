@@ -1,0 +1,1002 @@
+﻿[
+    {
+        "firstName":  "Albert",
+        "lastName":  "Einstein",
+        "bio":  "Physicien théoricien d\u0027origine allemande, père de la théorie de la relativité et lauréat du prix Nobel de physique 1921.",
+        "category":  "Science",
+        "nationality":  "Allemagne",
+        "birthDate":  "1879-03-14",
+        "deathDate":  "1955-04-18",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Marie",
+        "lastName":  "Curie",
+        "bio":  "Physicienne et chimiste franco-polonaise, pionnière de la radioactivité et double lauréate du prix Nobel.",
+        "category":  "Science",
+        "nationality":  "Pologne",
+        "birthDate":  "1867-11-07",
+        "deathDate":  "1934-07-04",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Isaac",
+        "lastName":  "Newton",
+        "bio":  "Mathématicien et physicien anglais, auteur des lois de la mécanique classique et de la gravitation universelle.",
+        "category":  "Science",
+        "nationality":  "Angleterre",
+        "birthDate":  "1643-01-04",
+        "deathDate":  "1727-03-31",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Charles",
+        "lastName":  "Darwin",
+        "bio":  "Naturaliste anglais, auteur de la théorie de l\u0027évolution par sélection naturelle.",
+        "category":  "Science",
+        "nationality":  "Angleterre",
+        "birthDate":  "1809-02-12",
+        "deathDate":  "1882-04-19",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Louis",
+        "lastName":  "Pasteur",
+        "bio":  "Chimiste et microbiologiste français, pionnier de la vaccination et de la pasteurisation.",
+        "category":  "Science",
+        "nationality":  "France",
+        "birthDate":  "1822-12-27",
+        "deathDate":  "1895-09-28",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Nikola",
+        "lastName":  "Tesla",
+        "bio":  "Inventeur et ingénieur serbo-américain, pionnier du courant alternatif et de l\u0027électromagnétisme.",
+        "category":  "Science",
+        "nationality":  "Serbie",
+        "birthDate":  "1856-07-10",
+        "deathDate":  "1943-01-07",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Galilée",
+        "lastName":  "Galilei",
+        "bio":  "Astronome et physicien italien, père de l\u0027astronomie observationnelle moderne et de la physique moderne.",
+        "category":  "Science",
+        "nationality":  "Italie",
+        "birthDate":  "1564-02-15",
+        "deathDate":  "1642-01-08",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Stephen",
+        "lastName":  "Hawking",
+        "bio":  "Physicien théoricien britannique, connu pour ses travaux sur les trous noirs et la cosmologie.",
+        "category":  "Science",
+        "nationality":  "Angleterre",
+        "birthDate":  "1942-01-08",
+        "deathDate":  "2018-03-14",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Rosalind",
+        "lastName":  "Franklin",
+        "bio":  "Chimiste et cristallographe britannique, dont les travaux ont été essentiels à la découverte de la structure de l\u0027ADN.",
+        "category":  "Science",
+        "nationality":  "Angleterre",
+        "birthDate":  "1920-07-25",
+        "deathDate":  "1958-04-16",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Dmitri",
+        "lastName":  "Mendeleïev",
+        "bio":  "Chimiste russe, inventeur du tableau périodique des éléments chimiques.",
+        "category":  "Science",
+        "nationality":  "Russie",
+        "birthDate":  "1834-02-08",
+        "deathDate":  "1907-02-02",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Pablo",
+        "lastName":  "Picasso",
+        "bio":  "Peintre et sculpteur espagnol, cofondateur du cubisme et l\u0027un des artistes les plus influents du XXe siècle.",
+        "category":  "Art",
+        "nationality":  "Espagne",
+        "birthDate":  "1881-10-25",
+        "deathDate":  "1973-04-08",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Léonard",
+        "lastName":  "de Vinci",
+        "bio":  "Artiste, scientifique et inventeur italien de la Renaissance, auteur de La Joconde et de L\u0027Homme de Vitruve.",
+        "category":  "Art",
+        "nationality":  "Italie",
+        "birthDate":  "1452-04-15",
+        "deathDate":  "1519-05-02",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Vincent",
+        "lastName":  "Van Gogh",
+        "bio":  "Peintre postimpressionniste néerlandais, auteur de La Nuit étoilée et des Tournesols.",
+        "category":  "Art",
+        "nationality":  "Pays-Bas",
+        "birthDate":  "1853-03-30",
+        "deathDate":  "1890-07-29",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Claude",
+        "lastName":  "Monet",
+        "bio":  "Peintre français, fondateur de l\u0027impressionnisme et auteur des Nymphéas.",
+        "category":  "Art",
+        "nationality":  "France",
+        "birthDate":  "1840-11-14",
+        "deathDate":  "1926-12-05",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Frida",
+        "lastName":  "Kahlo",
+        "bio":  "Peintre mexicaine, connue pour ses autoportraits et son art inspiré de la culture mexicaine.",
+        "category":  "Art",
+        "nationality":  "Mexique",
+        "birthDate":  "1907-07-06",
+        "deathDate":  "1954-07-13",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Michel-Ange",
+        "lastName":  "Buonarroti",
+        "bio":  "Sculpteur, peintre et architecte italien de la Renaissance, auteur du David et de la chapelle Sixtine.",
+        "category":  "Art",
+        "nationality":  "Italie",
+        "birthDate":  "1475-03-06",
+        "deathDate":  "1564-02-18",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Salvador",
+        "lastName":  "Dalí",
+        "bio":  "Peintre surréaliste espagnol, célèbre pour ses œuvres oniriques comme La Persistance de la mémoire.",
+        "category":  "Art",
+        "nationality":  "Espagne",
+        "birthDate":  "1904-05-11",
+        "deathDate":  "1989-01-23",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Rembrandt",
+        "lastName":  "van Rijn",
+        "bio":  "Peintre et graveur néerlandais du siècle d\u0027or, maître du clair-obscur et de l\u0027autoportrait.",
+        "category":  "Art",
+        "nationality":  "Pays-Bas",
+        "birthDate":  "1606-07-15",
+        "deathDate":  "1669-10-04",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Auguste",
+        "lastName":  "Rodin",
+        "bio":  "Sculpteur français, considéré comme le père de la sculpture moderne, auteur du Penseur.",
+        "category":  "Art",
+        "nationality":  "France",
+        "birthDate":  "1840-11-12",
+        "deathDate":  "1917-11-17",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Andy",
+        "lastName":  "Warhol",
+        "bio":  "Artiste américain, figure de proue du pop art et auteur des sérigraphies de Marilyn Monroe.",
+        "category":  "Art",
+        "nationality":  "États-Unis",
+        "birthDate":  "1928-08-06",
+        "deathDate":  "1987-02-22",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Charles",
+        "lastName":  "de Gaulle",
+        "bio":  "Général et homme d\u0027État français, chef de la France libre et fondateur de la Ve République.",
+        "category":  "Politique",
+        "nationality":  "France",
+        "birthDate":  "1890-11-22",
+        "deathDate":  "1970-11-09",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Nelson",
+        "lastName":  "Mandela",
+        "bio":  "Militant anti-apartheid et premier président noir d\u0027Afrique du Sud, symbole de la réconciliation.",
+        "category":  "Politique",
+        "nationality":  "Afrique du Sud",
+        "birthDate":  "1918-07-18",
+        "deathDate":  "2013-12-05",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Abraham",
+        "lastName":  "Lincoln",
+        "bio":  "16e président des États-Unis, artisan de l\u0027abolition de l\u0027esclavage et de la préservation de l\u0027Union.",
+        "category":  "Politique",
+        "nationality":  "États-Unis",
+        "birthDate":  "1809-02-12",
+        "deathDate":  "1865-04-15",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Winston",
+        "lastName":  "Churchill",
+        "bio":  "Premier ministre britannique durant la Seconde Guerre mondiale, orateur et stratège légendaire.",
+        "category":  "Politique",
+        "nationality":  "Angleterre",
+        "birthDate":  "1874-11-30",
+        "deathDate":  "1965-01-24",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Angela",
+        "lastName":  "Merkel",
+        "bio":  "Chancelière fédérale d\u0027Allemagne de 2005 à 2021, figure majeure de la politique européenne.",
+        "category":  "Politique",
+        "nationality":  "Allemagne",
+        "birthDate":  "1954-07-17",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Mahatma",
+        "lastName":  "Gandhi",
+        "bio":  "Leader du mouvement d\u0027indépendance indien, apôtre de la non-violence et de la désobéissance civile.",
+        "category":  "Politique",
+        "nationality":  "Inde",
+        "birthDate":  "1869-10-02",
+        "deathDate":  "1948-01-30",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Martin Luther",
+        "lastName":  "King Jr.",
+        "bio":  "Pasteur et militant américain pour les droits civiques, célèbre pour son discours I Have a Dream.",
+        "category":  "Politique",
+        "nationality":  "États-Unis",
+        "birthDate":  "1929-01-15",
+        "deathDate":  "1968-04-04",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Simón",
+        "lastName":  "Bolívar",
+        "bio":  "Homme politique et militaire vénézuélien, libérateur de plusieurs nations d\u0027Amérique du Sud.",
+        "category":  "Politique",
+        "nationality":  "Venezuela",
+        "birthDate":  "1783-07-24",
+        "deathDate":  "1830-12-17",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Margaret",
+        "lastName":  "Thatcher",
+        "bio":  "Première ministre du Royaume-Uni de 1979 à 1990, surnommée la Dame de fer.",
+        "category":  "Politique",
+        "nationality":  "Angleterre",
+        "birthDate":  "1925-10-13",
+        "deathDate":  "2013-04-08",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Thomas",
+        "lastName":  "Jefferson",
+        "bio":  "3e président des États-Unis et principal rédacteur de la Déclaration d\u0027indépendance.",
+        "category":  "Politique",
+        "nationality":  "États-Unis",
+        "birthDate":  "1743-04-13",
+        "deathDate":  "1826-07-04",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Pelé",
+        "lastName":  "(Edson Arantes)",
+        "bio":  "Footballeur brésilien, considéré comme l\u0027un des plus grands joueurs de tous les temps avec trois Coupes du monde.",
+        "category":  "Sport",
+        "nationality":  "Brésil",
+        "birthDate":  "1940-10-23",
+        "deathDate":  "2022-12-29",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Muhammad",
+        "lastName":  "Ali",
+        "bio":  "Boxeur américain, triple champion du monde des poids lourds et icône de la lutte pour les droits civiques.",
+        "category":  "Sport",
+        "nationality":  "États-Unis",
+        "birthDate":  "1942-01-17",
+        "deathDate":  "2016-06-03",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Usain",
+        "lastName":  "Bolt",
+        "bio":  "Sprinter jamaïcain, détenteur des records du monde du 100m et 200m, huit fois champion olympique.",
+        "category":  "Sport",
+        "nationality":  "Jamaïque",
+        "birthDate":  "1986-08-21",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Serena",
+        "lastName":  "Williams",
+        "bio":  "Joueuse de tennis américaine, 23 titres du Grand Chelem en simple, l\u0027une des plus grandes sportives de l\u0027histoire.",
+        "category":  "Sport",
+        "nationality":  "États-Unis",
+        "birthDate":  "1981-09-26",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Zinédine",
+        "lastName":  "Zidane",
+        "bio":  "Footballeur français, Ballon d\u0027or et champion du monde 1998, devenu entraîneur du Real Madrid.",
+        "category":  "Sport",
+        "nationality":  "France",
+        "birthDate":  "1972-06-23",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Michael",
+        "lastName":  "Jordan",
+        "bio":  "Basketteur américain, six fois champion NBA et considéré comme le plus grand joueur de basketball.",
+        "category":  "Sport",
+        "nationality":  "États-Unis",
+        "birthDate":  "1963-02-17",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Nadia",
+        "lastName":  "Comăneci",
+        "bio":  "Gymnaste roumaine, première à obtenir la note parfaite de 10 aux Jeux olympiques de 1976.",
+        "category":  "Sport",
+        "nationality":  "Roumanie",
+        "birthDate":  "1961-11-12",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Roger",
+        "lastName":  "Federer",
+        "bio":  "Joueur de tennis suisse, 20 titres du Grand Chelem, considéré comme l\u0027un des plus élégants du circuit.",
+        "category":  "Sport",
+        "nationality":  "Suisse",
+        "birthDate":  "1981-08-08",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Jesse",
+        "lastName":  "Owens",
+        "bio":  "Athlète américain, quadruple champion olympique aux JO de Berlin 1936, symbole de la lutte contre le racisme.",
+        "category":  "Sport",
+        "nationality":  "États-Unis",
+        "birthDate":  "1913-09-12",
+        "deathDate":  "1980-03-31",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Marie-José",
+        "lastName":  "Pérec",
+        "bio":  "Athlète française, triple championne olympique du 200m et 400m, légende du sprint français.",
+        "category":  "Sport",
+        "nationality":  "France",
+        "birthDate":  "1968-05-09",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Victor",
+        "lastName":  "Hugo",
+        "bio":  "Écrivain français, auteur des Misérables et de Notre-Dame de Paris, figure majeure du romantisme.",
+        "category":  "Littérature",
+        "nationality":  "France",
+        "birthDate":  "1802-02-26",
+        "deathDate":  "1885-05-22",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "William",
+        "lastName":  "Shakespeare",
+        "bio":  "Dramaturge et poète anglais, auteur de Hamlet, Roméo et Juliette et Macbeth.",
+        "category":  "Littérature",
+        "nationality":  "Angleterre",
+        "birthDate":  "1564-04-23",
+        "deathDate":  "1616-04-23",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Léon",
+        "lastName":  "Tolstoï",
+        "bio":  "Romancier russe, auteur de Guerre et Paix et Anna Karénine, maître du réalisme littéraire.",
+        "category":  "Littérature",
+        "nationality":  "Russie",
+        "birthDate":  "1828-09-09",
+        "deathDate":  "1910-11-20",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Jane",
+        "lastName":  "Austen",
+        "bio":  "Romancière anglaise, auteure d\u0027Orgueil et Préjugés et de Raison et Sentiments.",
+        "category":  "Littérature",
+        "nationality":  "Angleterre",
+        "birthDate":  "1775-12-16",
+        "deathDate":  "1817-07-18",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Gabriel",
+        "lastName":  "García Márquez",
+        "bio":  "Écrivain colombien, auteur de Cent ans de solitude, prix Nobel de littérature 1982.",
+        "category":  "Littérature",
+        "nationality":  "Colombie",
+        "birthDate":  "1927-03-06",
+        "deathDate":  "2014-04-17",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Marcel",
+        "lastName":  "Proust",
+        "bio":  "Écrivain français, auteur d\u0027À la recherche du temps perdu, chef-d\u0027œuvre de la littérature mondiale.",
+        "category":  "Littérature",
+        "nationality":  "France",
+        "birthDate":  "1871-07-10",
+        "deathDate":  "1922-11-18",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Fiodor",
+        "lastName":  "Dostoïevski",
+        "bio":  "Romancier russe, auteur de Crime et Châtiment et des Frères Karamazov, maître du roman psychologique.",
+        "category":  "Littérature",
+        "nationality":  "Russie",
+        "birthDate":  "1821-11-11",
+        "deathDate":  "1881-02-09",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Toni",
+        "lastName":  "Morrison",
+        "bio":  "Romancière américaine, auteure de Beloved, première femme noire à recevoir le prix Nobel de littérature.",
+        "category":  "Littérature",
+        "nationality":  "États-Unis",
+        "birthDate":  "1931-02-18",
+        "deathDate":  "2019-08-05",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Franz",
+        "lastName":  "Kafka",
+        "bio":  "Écrivain praguois de langue allemande, auteur de La Métamorphose et Le Procès, figure de l\u0027absurde.",
+        "category":  "Littérature",
+        "nationality":  "Autriche-Hongrie",
+        "birthDate":  "1883-07-03",
+        "deathDate":  "1924-06-03",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Simone",
+        "lastName":  "de Beauvoir",
+        "bio":  "Écrivaine et philosophe française, auteure du Deuxième Sexe, figure majeure du féminisme.",
+        "category":  "Littérature",
+        "nationality":  "France",
+        "birthDate":  "1908-01-09",
+        "deathDate":  "1986-04-14",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Wolfgang Amadeus",
+        "lastName":  "Mozart",
+        "bio":  "Compositeur autrichien, prodige musical et auteur de La Flûte enchantée et du Requiem.",
+        "category":  "Musique",
+        "nationality":  "Autriche",
+        "birthDate":  "1756-01-27",
+        "deathDate":  "1791-12-05",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Ludwig van",
+        "lastName":  "Beethoven",
+        "bio":  "Compositeur et pianiste allemand, auteur de la 9e symphonie, ayant composé malgré sa surdité.",
+        "category":  "Musique",
+        "nationality":  "Allemagne",
+        "birthDate":  "1770-12-17",
+        "deathDate":  "1827-03-26",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "John",
+        "lastName":  "Lennon",
+        "bio":  "Musicien et compositeur britannique, cofondateur des Beatles et militant pour la paix.",
+        "category":  "Musique",
+        "nationality":  "Angleterre",
+        "birthDate":  "1940-10-09",
+        "deathDate":  "1980-12-08",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Édith",
+        "lastName":  "Piaf",
+        "bio":  "Chanteuse française, interprète de La Vie en rose et de Non, je ne regrette rien, icône de la chanson française.",
+        "category":  "Musique",
+        "nationality":  "France",
+        "birthDate":  "1915-12-19",
+        "deathDate":  "1963-10-10",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Bob",
+        "lastName":  "Marley",
+        "bio":  "Chanteur et musicien jamaïcain, légende du reggae et ambassadeur du mouvement rastafari.",
+        "category":  "Musique",
+        "nationality":  "Jamaïque",
+        "birthDate":  "1945-02-06",
+        "deathDate":  "1981-05-11",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Johann Sebastian",
+        "lastName":  "Bach",
+        "bio":  "Compositeur et musicien allemand de l\u0027époque baroque, auteur de cantates, fugues et concertos.",
+        "category":  "Musique",
+        "nationality":  "Allemagne",
+        "birthDate":  "1685-03-31",
+        "deathDate":  "1750-07-28",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Frédéric",
+        "lastName":  "Chopin",
+        "bio":  "Compositeur et pianiste polonais, virtuose du piano romantique et auteur de nocturnes et polonaises.",
+        "category":  "Musique",
+        "nationality":  "Pologne",
+        "birthDate":  "1810-03-01",
+        "deathDate":  "1849-10-17",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Ella",
+        "lastName":  "Fitzgerald",
+        "bio":  "Chanteuse de jazz américaine, surnommée la First Lady of Song, connue pour son scat virtuose.",
+        "category":  "Musique",
+        "nationality":  "États-Unis",
+        "birthDate":  "1917-04-25",
+        "deathDate":  "1996-06-15",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Giuseppe",
+        "lastName":  "Verdi",
+        "bio":  "Compositeur italien, maître de l\u0027opéra romantique, auteur de La Traviata et Aida.",
+        "category":  "Musique",
+        "nationality":  "Italie",
+        "birthDate":  "1813-10-10",
+        "deathDate":  "1901-01-27",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Aretha",
+        "lastName":  "Franklin",
+        "bio":  "Chanteuse américaine, reine de la soul et icône des droits civiques, interprète de Respect.",
+        "category":  "Musique",
+        "nationality":  "États-Unis",
+        "birthDate":  "1942-03-25",
+        "deathDate":  "2018-08-16",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Charlie",
+        "lastName":  "Chaplin",
+        "bio":  "Acteur et réalisateur britannique, créateur du personnage de Charlot, pionnier du cinéma muet.",
+        "category":  "Cinéma",
+        "nationality":  "Angleterre",
+        "birthDate":  "1889-04-16",
+        "deathDate":  "1977-12-25",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Alfred",
+        "lastName":  "Hitchcock",
+        "bio":  "Réalisateur britannique, maître du suspense, auteur de Psychose, Vertigo et Les Oiseaux.",
+        "category":  "Cinéma",
+        "nationality":  "Angleterre",
+        "birthDate":  "1899-08-13",
+        "deathDate":  "1980-04-29",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Stanley",
+        "lastName":  "Kubrick",
+        "bio":  "Réalisateur américain, perfectionniste visionnaire, auteur de 2001, Orange mécanique et Shining.",
+        "category":  "Cinéma",
+        "nationality":  "États-Unis",
+        "birthDate":  "1928-07-26",
+        "deathDate":  "1999-03-07",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Hayao",
+        "lastName":  "Miyazaki",
+        "bio":  "Réalisateur et animateur japonais, cofondateur du Studio Ghibli, auteur du Voyage de Chihiro.",
+        "category":  "Cinéma",
+        "nationality":  "Japon",
+        "birthDate":  "1941-01-05",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Meryl",
+        "lastName":  "Streep",
+        "bio":  "Actrice américaine, recordwoman des nominations aux Oscars, considérée comme la plus grande actrice de sa génération.",
+        "category":  "Cinéma",
+        "nationality":  "États-Unis",
+        "birthDate":  "1949-06-22",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Akira",
+        "lastName":  "Kurosawa",
+        "bio":  "Réalisateur japonais, maître du cinéma mondial, auteur des Sept Samouraïs et Rashōmon.",
+        "category":  "Cinéma",
+        "nationality":  "Japon",
+        "birthDate":  "1910-03-23",
+        "deathDate":  "1998-09-06",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Federico",
+        "lastName":  "Fellini",
+        "bio":  "Réalisateur italien, figure du néoréalisme et du cinéma onirique, auteur de La Dolce Vita et 8½.",
+        "category":  "Cinéma",
+        "nationality":  "Italie",
+        "birthDate":  "1920-01-20",
+        "deathDate":  "1993-10-31",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Agnès",
+        "lastName":  "Varda",
+        "bio":  "Réalisatrice française, pionnière de la Nouvelle Vague et documentariste engagée.",
+        "category":  "Cinéma",
+        "nationality":  "France",
+        "birthDate":  "1928-05-30",
+        "deathDate":  "2019-03-29",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Steven",
+        "lastName":  "Spielberg",
+        "bio":  "Réalisateur et producteur américain, auteur de La Liste de Schindler, E.T. et Jurassic Park.",
+        "category":  "Cinéma",
+        "nationality":  "États-Unis",
+        "birthDate":  "1946-12-18",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Ingmar",
+        "lastName":  "Bergman",
+        "bio":  "Réalisateur et scénariste suédois, maître du cinéma existentiel, auteur du Septième Sceau.",
+        "category":  "Cinéma",
+        "nationality":  "Suède",
+        "birthDate":  "1918-07-14",
+        "deathDate":  "2007-07-30",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Socrate",
+        "lastName":  "d\u0027Athènes",
+        "bio":  "Philosophe grec, fondateur de la philosophie occidentale, maître de Platon et inventeur de la maïeutique.",
+        "category":  "Philosophie",
+        "nationality":  "Grèce",
+        "birthDate":  "0470-01-01",
+        "deathDate":  "0399-01-01",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "René",
+        "lastName":  "Descartes",
+        "bio":  "Philosophe et mathématicien français, père du rationalisme moderne et auteur du Discours de la méthode.",
+        "category":  "Philosophie",
+        "nationality":  "France",
+        "birthDate":  "1596-03-31",
+        "deathDate":  "1650-02-11",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Emmanuel",
+        "lastName":  "Kant",
+        "bio":  "Philosophe allemand, auteur de la Critique de la raison pure, figure centrale de la philosophie moderne.",
+        "category":  "Philosophie",
+        "nationality":  "Allemagne",
+        "birthDate":  "1724-04-22",
+        "deathDate":  "1804-02-12",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Simone",
+        "lastName":  "Weil",
+        "bio":  "Philosophe et mystique française, engagée pour la justice sociale et auteure de La Pesanteur et la Grâce.",
+        "category":  "Philosophie",
+        "nationality":  "France",
+        "birthDate":  "1909-02-03",
+        "deathDate":  "1943-08-24",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Confucius",
+        "lastName":  "(Kong Qiu)",
+        "bio":  "Philosophe chinois, fondateur du confucianisme et penseur de l\u0027éthique, de la morale et du gouvernement.",
+        "category":  "Philosophie",
+        "nationality":  "Chine",
+        "birthDate":  "0551-09-28",
+        "deathDate":  "0479-04-11",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Friedrich",
+        "lastName":  "Nietzsche",
+        "bio":  "Philosophe allemand, auteur d\u0027Ainsi parlait Zarathoustra et penseur de la volonté de puissance.",
+        "category":  "Philosophie",
+        "nationality":  "Allemagne",
+        "birthDate":  "1844-10-15",
+        "deathDate":  "1900-08-25",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Platon",
+        "lastName":  "d\u0027Athènes",
+        "bio":  "Philosophe grec, fondateur de l\u0027Académie d\u0027Athènes et auteur de La République et du Banquet.",
+        "category":  "Philosophie",
+        "nationality":  "Grèce",
+        "birthDate":  "0428-01-01",
+        "deathDate":  "0348-01-01",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Jean-Paul",
+        "lastName":  "Sartre",
+        "bio":  "Philosophe et écrivain français, fondateur de l\u0027existentialisme, auteur de L\u0027Être et le Néant.",
+        "category":  "Philosophie",
+        "nationality":  "France",
+        "birthDate":  "1905-06-21",
+        "deathDate":  "1980-04-15",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Hannah",
+        "lastName":  "Arendt",
+        "bio":  "Philosophe et politologue allemande naturalisée américaine, auteure de La Banalité du mal.",
+        "category":  "Philosophie",
+        "nationality":  "Allemagne",
+        "birthDate":  "1906-10-14",
+        "deathDate":  "1975-12-04",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Aristote",
+        "lastName":  "de Stagire",
+        "bio":  "Philosophe grec, disciple de Platon, fondateur du Lycée et penseur universel couvrant logique, physique et éthique.",
+        "category":  "Philosophie",
+        "nationality":  "Grèce",
+        "birthDate":  "0384-01-01",
+        "deathDate":  "0322-01-01",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Jules",
+        "lastName":  "César",
+        "bio":  "Général et homme d\u0027État romain, conquérant de la Gaule et dictateur à vie de la République romaine.",
+        "category":  "Histoire",
+        "nationality":  "Rome",
+        "birthDate":  "0100-07-12",
+        "deathDate":  "0044-03-15",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Cléopâtre",
+        "lastName":  "VII",
+        "bio":  "Dernière reine d\u0027Égypte de la dynastie ptolémaïque, figure emblématique de l\u0027Antiquité.",
+        "category":  "Histoire",
+        "nationality":  "Égypte",
+        "birthDate":  "0069-01-01",
+        "deathDate":  "0030-08-12",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Napoléon",
+        "lastName":  "Bonaparte",
+        "bio":  "Empereur des Français, stratège militaire de génie et réformateur du droit avec le Code civil.",
+        "category":  "Histoire",
+        "nationality":  "France",
+        "birthDate":  "1769-08-15",
+        "deathDate":  "1821-05-05",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Jeanne",
+        "lastName":  "d\u0027Arc",
+        "bio":  "Héroïne de la guerre de Cent Ans, cheffe de guerre française brûlée vive puis canonisée.",
+        "category":  "Histoire",
+        "nationality":  "France",
+        "birthDate":  "1412-01-06",
+        "deathDate":  "1431-05-30",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Alexandre",
+        "lastName":  "le Grand",
+        "bio":  "Roi de Macédoine et conquérant d\u0027un empire s\u0027étendant de la Grèce à l\u0027Inde.",
+        "category":  "Histoire",
+        "nationality":  "Macédoine",
+        "birthDate":  "0356-07-20",
+        "deathDate":  "0323-06-10",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Gengis",
+        "lastName":  "Khan",
+        "bio":  "Fondateur et premier empereur de l\u0027Empire mongol, le plus vaste empire terrestre de l\u0027histoire.",
+        "category":  "Histoire",
+        "nationality":  "Mongolie",
+        "birthDate":  "1162-01-01",
+        "deathDate":  "1227-08-18",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Ramsès",
+        "lastName":  "II",
+        "bio":  "Pharaon d\u0027Égypte, l\u0027un des plus puissants et célèbres souverains de l\u0027Égypte antique.",
+        "category":  "Histoire",
+        "nationality":  "Égypte",
+        "birthDate":  "1303-01-01",
+        "deathDate":  "1213-01-01",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Christophe",
+        "lastName":  "Colomb",
+        "bio":  "Navigateur génois, découvreur de l\u0027Amérique en 1492 au service de la couronne espagnole.",
+        "category":  "Histoire",
+        "nationality":  "Italie",
+        "birthDate":  "1451-10-31",
+        "deathDate":  "1506-05-20",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Léonidas",
+        "lastName":  "Ier",
+        "bio":  "Roi de Sparte, héros de la bataille des Thermopyles contre l\u0027Empire perse en 480 av. J.-C.",
+        "category":  "Histoire",
+        "nationality":  "Grèce",
+        "birthDate":  "0540-01-01",
+        "deathDate":  "0480-08-11",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Catherine",
+        "lastName":  "de Médicis",
+        "bio":  "Reine de France, régente influente durant les guerres de religion et mécène des arts.",
+        "category":  "Histoire",
+        "nationality":  "Italie",
+        "birthDate":  "1519-04-13",
+        "deathDate":  "1589-01-05",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Alan",
+        "lastName":  "Turing",
+        "bio":  "Mathématicien et cryptologue britannique, père de l\u0027informatique théorique et du concept de machine universelle.",
+        "category":  "Technologie",
+        "nationality":  "Angleterre",
+        "birthDate":  "1912-06-23",
+        "deathDate":  "1954-06-07",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Steve",
+        "lastName":  "Jobs",
+        "bio":  "Cofondateur d\u0027Apple, visionnaire de l\u0027informatique personnelle et du design technologique.",
+        "category":  "Technologie",
+        "nationality":  "États-Unis",
+        "birthDate":  "1955-02-24",
+        "deathDate":  "2011-10-05",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Tim",
+        "lastName":  "Berners-Lee",
+        "bio":  "Informaticien britannique, inventeur du World Wide Web et défenseur de l\u0027internet ouvert.",
+        "category":  "Technologie",
+        "nationality":  "Angleterre",
+        "birthDate":  "1955-06-08",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Ada",
+        "lastName":  "Lovelace",
+        "bio":  "Mathématicienne britannique, considérée comme la première programmeuse de l\u0027histoire pour ses travaux sur la machine analytique.",
+        "category":  "Technologie",
+        "nationality":  "Angleterre",
+        "birthDate":  "1815-12-10",
+        "deathDate":  "1852-11-27",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Linus",
+        "lastName":  "Torvalds",
+        "bio":  "Ingénieur logiciel finlandais, créateur du noyau Linux et du système de contrôle de version Git.",
+        "category":  "Technologie",
+        "nationality":  "Finlande",
+        "birthDate":  "1969-12-28",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Grace",
+        "lastName":  "Hopper",
+        "bio":  "Informaticienne et contre-amiral américaine, pionnière de la programmation et co-créatrice du COBOL.",
+        "category":  "Technologie",
+        "nationality":  "États-Unis",
+        "birthDate":  "1906-12-09",
+        "deathDate":  "1992-01-01",
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Bill",
+        "lastName":  "Gates",
+        "bio":  "Cofondateur de Microsoft, pionnier de l\u0027industrie du logiciel et philanthrope engagé.",
+        "category":  "Technologie",
+        "nationality":  "États-Unis",
+        "birthDate":  "1955-10-28",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Margaret",
+        "lastName":  "Hamilton",
+        "bio":  "Informaticienne américaine, directrice du développement logiciel pour le programme Apollo de la NASA.",
+        "category":  "Technologie",
+        "nationality":  "États-Unis",
+        "birthDate":  "1936-08-17",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Vint",
+        "lastName":  "Cerf",
+        "bio":  "Informaticien américain, co-inventeur du protocole TCP/IP et considéré comme l\u0027un des pères d\u0027Internet.",
+        "category":  "Technologie",
+        "nationality":  "États-Unis",
+        "birthDate":  "1943-06-23",
+        "deathDate":  null,
+        "imageUrl":  null
+    },
+    {
+        "firstName":  "Hedy",
+        "lastName":  "Lamarr",
+        "bio":  "Actrice et inventrice austro-américaine, co-inventrice du saut de fréquence à la base du Wi-Fi et du Bluetooth.",
+        "category":  "Technologie",
+        "nationality":  "Autriche",
+        "birthDate":  "1914-11-09",
+        "deathDate":  "2000-01-19",
+        "imageUrl":  null
+    }
+]

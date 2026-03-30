@@ -1,0 +1,74 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "HelloGrpc.Shared";
+
+package personality;
+
+// Service gRPC pour la gestion des personnalités
+service PersonalityGrpc {
+  rpc GetPersonalities (GetPersonalitiesRequest) returns (GetPersonalitiesResponse);
+  rpc GetPersonality (GetPersonalityRequest) returns (PersonalityMessage);
+  rpc CreatePersonality (CreatePersonalityRequest) returns (PersonalityMessage);
+  rpc UpdatePersonality (UpdatePersonalityRequest) returns (PersonalityMessage);
+  rpc DeletePersonality (DeletePersonalityRequest) returns (DeletePersonalityResponse);
+}
+
+// Représente une personnalité
+message PersonalityMessage {
+  int32 id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string bio = 4;
+  string category = 5;
+  string nationality = 6;
+  string birth_date = 7;
+  string death_date = 8;
+  string image_url = 9;
+}
+
+message GetPersonalitiesRequest {
+  string search_term = 1;
+  string category = 2;
+  int32 skip = 3;
+  int32 take = 4;
+}
+
+message GetPersonalitiesResponse {
+  repeated PersonalityMessage personalities = 1;
+  int32 total_count = 2;
+}
+
+message GetPersonalityRequest {
+  int32 id = 1;
+}
+
+message CreatePersonalityRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string bio = 3;
+  string category = 4;
+  string nationality = 5;
+  string birth_date = 6;
+  string death_date = 7;
+  string image_url = 8;
+}
+
+message UpdatePersonalityRequest {
+  int32 id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string bio = 4;
+  string category = 5;
+  string nationality = 6;
+  string birth_date = 7;
+  string death_date = 8;
+  string image_url = 9;
+}
+
+message DeletePersonalityRequest {
+  int32 id = 1;
+}
+
+message DeletePersonalityResponse {
+  bool success = 1;
+}

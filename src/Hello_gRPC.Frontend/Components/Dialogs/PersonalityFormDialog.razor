@@ -1,0 +1,127 @@
+﻿@inject PersonalityGrpcClient PersonalityClient
+
+<MudDialog>
+    <DialogContent>
+        <MudForm @ref="_form" @bind-IsValid="_isValid">
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_firstName" Label="Prénom" Required RequiredError="Le prénom est requis." />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_lastName" Label="Nom" Required RequiredError="Le nom est requis." />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudSelect @bind-Value="_category" Label="Catégorie" Required RequiredError="La catégorie est requise.">
+                        @foreach (var cat in _categories)
+                        {
+                            <MudSelectItem Value="@cat">@cat</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="_nationality" Label="Nationalité" Required RequiredError="La nationalité est requise." />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudDatePicker @bind-Date="_birthDate" Label="Date de naissance" Required RequiredError="La date de naissance est requise." DateFormat="yyyy-MM-dd" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudDatePicker @bind-Date="_deathDate" Label="Date de décès" Clearable DateFormat="yyyy-MM-dd" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_bio" Label="Biographie" Lines="4" Required RequiredError="La biographie est requise." />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_imageUrl" Label="URL de l'image" />
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Annuler</MudButton>
+        <MudButton Color="Color.Primary" Disabled="!_isValid" OnClick="Submit">
+            @(_isEditMode ? "Modifier" : "Créer")
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
+    [Parameter] public PersonalityMessage? Personality { get; set; }
+
+    private MudForm _form = null!;
+    private bool _isValid;
+    private bool _isEditMode;
+
+    private string _firstName = "";
+    private string _lastName = "";
+    private string _bio = "";
+    private string _category = "";
+    private string _nationality = "";
+    private DateTime? _birthDate;
+    private DateTime? _deathDate;
+    private string _imageUrl = "";
+
+    private readonly List<string> _categories =
+    [
+        "Science", "Art", "Politique", "Sport", "Littérature",
+        "Musique", "Cinéma", "Philosophie", "Histoire", "Technologie"
+    ];
+
+    protected override void OnParametersSet()
+    {
+        if (Personality is not null)
+        {
+            _isEditMode = true;
+            _firstName = Personality.FirstName;
+            _lastName = Personality.LastName;
+            _bio = Personality.Bio;
+            _category = Personality.Category;
+            _nationality = Personality.Nationality;
+            _birthDate = string.IsNullOrEmpty(Personality.BirthDate) ? null : DateTime.Parse(Personality.BirthDate);
+            _deathDate = string.IsNullOrEmpty(Personality.DeathDate) ? null : DateTime.Parse(Personality.DeathDate);
+            _imageUrl = Personality.ImageUrl;
+        }
+    }
+
+    private async Task Submit()
+    {
+        await _form.Validate();
+        if (!_isValid) return;
+
+        if (_isEditMode)
+        {
+            var request = new UpdatePersonalityRequest
+            {
+                Id = Personality!.Id,
+                FirstName = _firstName,
+                LastName = _lastName,
+                Bio = _bio,
+                Category = _category,
+                Nationality = _nationality,
+                BirthDate = _birthDate?.ToString("yyyy-MM-dd") ?? "",
+                DeathDate = _deathDate?.ToString("yyyy-MM-dd") ?? "",
+                ImageUrl = _imageUrl ?? ""
+            };
+            await PersonalityClient.UpdatePersonalityAsync(request);
+        }
+        else
+        {
+            var request = new CreatePersonalityRequest
+            {
+                FirstName = _firstName,
+                LastName = _lastName,
+                Bio = _bio,
+                Category = _category,
+                Nationality = _nationality,
+                BirthDate = _birthDate?.ToString("yyyy-MM-dd") ?? "",
+                DeathDate = _deathDate?.ToString("yyyy-MM-dd") ?? "",
+                ImageUrl = _imageUrl ?? ""
+            };
+            await PersonalityClient.CreatePersonalityAsync(request);
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
