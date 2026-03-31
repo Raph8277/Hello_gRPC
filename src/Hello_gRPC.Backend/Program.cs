@@ -1,5 +1,4 @@
-﻿
-using HelloGrpc.Data;
+﻿using HelloGrpc.Data;
 using HelloGrpc.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
@@ -43,24 +42,13 @@ static class Program
 
 
         // Ajout des services HelloGrpc (DbContext, PersonalityService, etc.)
-        builder.Services.AddHelloGrpcServices("Data Source=../Hello_gRPC.Data/hello_grpc.db");
         builder.Services.AddGrpc();
+        builder.Services.AddHelloGrpcAppContext("Data Source=../Hello_gRPC.Data/hello_grpc.db");
+        builder.Services.AddHelloGrpcPersonalityService();
 
         var app = builder.Build();
 
-        //// Endpoint REST pour exposer la liste complète des personnalités pour la grille WinForms
-        //app.MapGet("/api/personalities", async (HelloGrpc.Data.AppDbContext db) =>
-        //    await db.Personalities.Select(p => new {
-        //        p.FirstName,
-        //        p.LastName,
-        //        p.Category,
-        //        p.Nationality,
-        //        BirthDate = p.BirthDate.ToString("yyyy-MM-dd"),
-        //        DeathDate = p.DeathDate.HasValue ? p.DeathDate.Value.ToString("yyyy-MM-dd") : string.Empty,
-        //        p.Bio,
-        //        p.ImageUrl
-        //    }).ToListAsync()
-        //);
+     
 
         // Appliquer les migrations et seeder
         using (var scope = app.Services.CreateScope())
