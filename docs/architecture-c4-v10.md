@@ -14,7 +14,8 @@
 4. [Diagramme de Composants — Frontend (Level 3)](#4-diagramme-de-composants--frontend-level-3)
 5. [Diagramme Dynamique — Création (Level 4)](#5-diagramme-dynamique--création-level-4)
 6. [Diagramme Dynamique — Lecture (Level 4)](#6-diagramme-dynamique--lecture-level-4)
-7. [Diagramme de Déploiement](#7-diagramme-de-déploiement)
+7. [Diagrammes de séquence — Flux CRUD détaillés](#7-diagrammes-de-séquence--flux-crud-détaillés)
+8. [Diagramme de Déploiement](#8-diagramme-de-déploiement)
 
 ---
 
@@ -214,7 +215,204 @@ C4Dynamic
 
 ---
 
-## 7. Diagramme de Déploiement
+## 7. Diagrammes de séquence — Flux CRUD détaillés
+
+Les diagrammes de séquence détaillent chaque appel de méthode à travers les couches, incluant les retours et les cas d'erreur.
+
+### Lecture paginée avec filtres
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as Navigateur
+    participant PL as PersonalityList
+    participant GC as PersonalityGrpcClient
+    participant CH as Canal gRPC<br/>(Protobuf / HTTP/2)
+    participant GS as PersonalityService<br/>(gRPC Backend)
+    participant BS as PersonalityService<br/>(Service Métier)
+    participant DB as AppDbContext<br/>(EF Core SQLite)
+
+    U->>PL: Navigue vers /personalities
+    activate PL
+    PL->>PL: MudDataGrid déclenche LoadServerData(state)
+    PL->>GC: GetPersonalitiesAsync(search, category, skip, take)
+    activate GC
+    GC->>CH: GetPersonalitiesAsync(request)
+    activate CH
+    Note over CH: Sérialise en Protobuf binaire<br/>Envoie via HTTP/2
+
+    CH->>GS: GetPersonalities(request, context)
+    activate GS
+    GS->>BS: GetAllAsync()
+    activate BS
+    BS->>DB: Personalities.ToListAsync()
+    activate DB
+    DB-->>BS: List<Personality>
+    deactivate DB
+    BS-->>GS: List<Personality>
+    deactivate BS
+
+    GS->>GS: Filtre, pagine, mappe Entity → Proto
+    GS-->>CH: GetPersonalitiesResponse
+    deactivate GS
+
+    CH-->>GC: GetPersonalitiesResponse
+    deactivate CH
+    GC-->>PL: GetPersonalitiesResponse
+    deactivate GC
+    PL-->>U: Affiche MudDataGrid paginé
+    deactivate PL
+```
+
+### Création d'une personnalité
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as Navigateur
+    participant PL as PersonalityList
+    participant DLG as PersonalityFormDialog
+    participant GC as PersonalityGrpcClient
+    participant CH as Canal gRPC<br/>(Protobuf / HTTP/2)
+    participant GS as PersonalityService<br/>(gRPC Backend)
+    participant BS as PersonalityService<br/>(Service Métier)
+    participant DB as AppDbContext<br/>(EF Core SQLite)
+
+    U->>PL: Clique « Ajouter »
+    activate PL
+    PL->>DLG: ShowAsync<PersonalityFormDialog>()
+    activate DLG
+    U->>DLG: Remplit les champs, clique « Créer »
+    DLG->>GC: CreatePersonalityAsync(request)
+    activate GC
+    GC->>CH: CreatePersonalityAsync(request)
+    activate CH
+
+    CH->>GS: CreatePersonality(request, context)
+    activate GS
+    GS->>GS: Valide FirstName, LastName, Bio
+    Note right of GS: Si invalide → RpcException<br/>StatusCode.InvalidArgument
+    GS->>BS: AddAsync(entity)
+    activate BS
+    BS->>DB: SaveChangesAsync()
+    activate DB
+    DB-->>BS: Entity avec Id
+    deactivate DB
+    BS-->>GS: Entity créée
+    deactivate BS
+    GS->>GS: Mappe Entity → PersonalityMessage
+    GS-->>CH: PersonalityMessage
+    deactivate GS
+
+    CH-->>GC: PersonalityMessage
+    deactivate CH
+    GC-->>DLG: PersonalityMessage
+    deactivate GC
+    DLG-->>PL: DialogResult.Ok
+    deactivate DLG
+    PL->>U: Snackbar « Personnalité créée avec succès »
+    PL->>PL: ReloadServerData()
+    deactivate PL
+```
+
+### Suppression d'une personnalité
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as Navigateur
+    participant PL as PersonalityList
+    participant DLG as ConfirmDeleteDialog
+    participant GC as PersonalityGrpcClient
+    participant CH as Canal gRPC<br/>(Protobuf / HTTP/2)
+    participant GS as PersonalityService<br/>(gRPC Backend)
+    participant BS as PersonalityService<br/>(Service Métier)
+    participant DB as AppDbContext<br/>(EF Core SQLite)
+
+    U->>PL: Clique « Supprimer »
+    activate PL
+    PL->>DLG: ShowAsync(ContentText: "Supprimer X Y ?")
+    activate DLG
+    U->>DLG: Confirme la suppression
+    DLG-->>PL: DialogResult.Ok
+    deactivate DLG
+
+    PL->>GC: DeletePersonalityAsync(id)
+    activate GC
+    GC->>CH: DeletePersonalityAsync(request)
+    activate CH
+    CH->>GS: DeletePersonality(request, context)
+    activate GS
+    GS->>BS: DeleteAsync(request.Id)
+    activate BS
+    BS->>DB: FindAsync(id)
+    activate DB
+    DB-->>BS: Entity ou null
+    deactivate DB
+
+    alt Entity introuvable
+        BS-->>GS: false
+        GS-->>CH: RpcException(NotFound)
+    else Entity trouvée
+        BS->>DB: Remove + SaveChangesAsync()
+        activate DB
+        DB-->>BS: OK
+        deactivate DB
+        BS-->>GS: true
+        deactivate BS
+        GS-->>CH: DeletePersonalityResponse(Success: true)
+    end
+    deactivate GS
+
+    CH-->>GC: Réponse
+    deactivate CH
+    GC-->>PL: Réponse
+    deactivate GC
+    PL->>U: Snackbar « Personnalité supprimée »
+    PL->>PL: ReloadServerData()
+    deactivate PL
+```
+
+### Gestion des erreurs gRPC
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as Navigateur
+    participant PL as PersonalityList
+    participant GC as PersonalityGrpcClient
+    participant CH as Canal gRPC<br/>(Protobuf / HTTP/2)
+    participant GS as PersonalityService<br/>(gRPC Backend)
+
+    U->>PL: Action CRUD
+    activate PL
+    PL->>GC: Appel async
+    activate GC
+    GC->>CH: Requête gRPC
+    activate CH
+    CH->>GS: Appel RPC
+    activate GS
+
+    alt Champ requis manquant
+        GS-->>CH: RpcException(InvalidArgument)
+    else Entité introuvable
+        GS-->>CH: RpcException(NotFound)
+    else Erreur inattendue
+        GS-->>CH: RpcException(Internal)
+    end
+    deactivate GS
+
+    CH-->>GC: RpcException
+    deactivate CH
+    GC-->>PL: RpcException
+    deactivate GC
+    PL->>U: Snackbar d'erreur
+    deactivate PL
+```
+
+---
+
+## 8. Diagramme de Déploiement
 
 ```mermaid
 C4Deployment

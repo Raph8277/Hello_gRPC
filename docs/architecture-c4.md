@@ -22,10 +22,16 @@
 6. [Diagramme de Composants — Frontend — Level 3](#6-diagramme-de-composants--frontend--level-3)
 7. [Diagramme Dynamique — Création avec sérialisation Protobuf — Level 4](#7-diagramme-dynamique--création-avec-sérialisation-protobuf--level-4)
 8. [Diagramme Dynamique — Lecture paginée — Level 4](#8-diagramme-dynamique--lecture-paginée--level-4)
-9. [Diagramme de Déploiement](#9-diagramme-de-déploiement)
-10. [Schéma du pipeline gRPC complet](#10-schéma-du-pipeline-grpc-complet)
-11. [Structure de la solution](#11-structure-de-la-solution)
-12. [Annexe — Correspondances .proto ↔ C#](#12-annexe--correspondances-proto--c)
+9. [Diagrammes de séquence — Flux CRUD détaillés](#9-diagrammes-de-séquence--flux-crud-détaillés)
+   - [Lecture paginée avec filtres](#lecture-paginée-avec-filtres)
+   - [Création d'une personnalité](#création-dune-personnalité)
+   - [Modification d'une personnalité](#modification-dune-personnalité)
+   - [Suppression d'une personnalité](#suppression-dune-personnalité)
+   - [Gestion des erreurs gRPC](#gestion-des-erreurs-grpc-1)
+10. [Diagramme de Déploiement](#10-diagramme-de-déploiement)
+11. [Schéma du pipeline gRPC complet](#11-schéma-du-pipeline-grpc-complet)
+12. [Structure de la solution](#12-structure-de-la-solution)
+13. [Annexe — Correspondances .proto ↔ C#](#13-annexe--correspondances-proto--c)
 
 ---
 
@@ -753,7 +759,331 @@ Réponse (GetPersonalitiesResponse) :
 
 ---
 
-## 9. Diagramme de Déploiement
+## 9. Diagrammes de séquence — Flux CRUD détaillés
+
+Les diagrammes de séquence ci-dessous illustrent les interactions entre chaque participant de l'architecture, couche par couche, pour les 5 opérations CRUD. Contrairement aux diagrammes C4 Dynamic qui montrent une vue synthétique, les diagrammes de séquence détaillent chaque appel de méthode, chaque retour, et les cas d'erreur.
+
+### Participants communs
+
+| Participant | Couche | Classe | Rôle |
+|-------------|--------|--------|------|
+| **Navigateur** | — | Blazor UI (SignalR) | Interaction utilisateur |
+| **PersonalityList** | Frontend | `PersonalityList.razor` | Page MudDataGrid, orchestration CRUD |
+| **PersonalityGrpcClient** | Frontend | `PersonalityGrpcClient.cs` | Wrapper client gRPC, construction des requêtes |
+| **Canal gRPC** | Transport | `Grpc.Net.Client` / Kestrel HTTP/2 | Sérialisation Protobuf, transport HTTP/2 |
+| **PersonalityService (gRPC)** | Backend | `PersonalityService.cs` (Backend) | Validation, mapping proto ↔ entité |
+| **PersonalityService (Métier)** | Service | `PersonalityService.cs` (Service) | Logique métier CRUD |
+| **AppDbContext** | Data | `AppDbContext.cs` | Requêtes EF Core vers SQLite |
+
+### Lecture paginée avec filtres
+
+**Scénario** : L'utilisateur navigue vers `/personalities`, la page MudDataGrid déclenche `LoadServerData` pour charger la première page de données avec pagination et filtres optionnels.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as Navigateur
+    participant PL as PersonalityList
+    participant GC as PersonalityGrpcClient
+    participant CH as Canal gRPC<br/>(Protobuf / HTTP/2)
+    participant GS as PersonalityService<br/>(gRPC Backend)
+    participant BS as PersonalityService<br/>(Service Métier)
+    participant DB as AppDbContext<br/>(EF Core SQLite)
+
+    U->>PL: Navigue vers /personalities
+    activate PL
+    PL->>PL: MudDataGrid déclenche LoadServerData(state)
+    PL->>GC: GetPersonalitiesAsync(search, category, skip, take)
+    activate GC
+    GC->>GC: Construit GetPersonalitiesRequest
+    GC->>CH: GetPersonalitiesAsync(request)
+    activate CH
+    Note over CH: Sérialise en Protobuf binaire<br/>Envoie via HTTP/2 frame DATA
+
+    CH->>GS: GetPersonalities(request, context)
+    activate GS
+    GS->>BS: GetAllAsync()
+    activate BS
+    BS->>DB: Personalities.ToListAsync()
+    activate DB
+    DB-->>BS: List<Personality>
+    deactivate DB
+    BS-->>GS: List<Personality>
+    deactivate BS
+
+    GS->>GS: Filtre par SearchTerm et Category
+    GS->>GS: Applique Skip / Take (pagination)
+    GS->>GS: Mappe chaque Entity → PersonalityMessage
+
+    GS-->>CH: GetPersonalitiesResponse
+    deactivate GS
+    Note over CH: Sérialise la réponse Protobuf<br/>Retourne via HTTP/2
+
+    CH-->>GC: GetPersonalitiesResponse
+    deactivate CH
+    GC-->>PL: GetPersonalitiesResponse
+    deactivate GC
+    PL->>PL: Retourne GridData(Items, TotalItems)
+    PL-->>U: Affiche MudDataGrid paginé
+    deactivate PL
+```
+
+### Création d'une personnalité
+
+**Scénario** : L'utilisateur clique « Ajouter », remplit le formulaire `PersonalityFormDialog`, puis valide. Le MudDataGrid est rechargé après succès.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as Navigateur
+    participant PL as PersonalityList
+    participant DLG as PersonalityFormDialog
+    participant GC as PersonalityGrpcClient
+    participant CH as Canal gRPC<br/>(Protobuf / HTTP/2)
+    participant GS as PersonalityService<br/>(gRPC Backend)
+    participant BS as PersonalityService<br/>(Service Métier)
+    participant DB as AppDbContext<br/>(EF Core SQLite)
+
+    U->>PL: Clique « Ajouter »
+    activate PL
+    PL->>DLG: DialogService.ShowAsync<PersonalityFormDialog>()
+    activate DLG
+    U->>DLG: Remplit les champs et clique « Créer »
+    DLG->>DLG: MudForm validation côté client
+    DLG->>GC: CreatePersonalityAsync(request)
+    activate GC
+    GC->>CH: CreatePersonalityAsync(request)
+    activate CH
+    Note over CH: Sérialise CreatePersonalityRequest<br/>en Protobuf binaire
+
+    CH->>GS: CreatePersonality(request, context)
+    activate GS
+
+    GS->>GS: Valide FirstName, LastName, Bio
+    Note right of GS: Si invalide → RpcException<br/>StatusCode.InvalidArgument
+
+    GS->>GS: Mappe Proto → Entity Personality
+    GS->>BS: AddAsync(entity)
+    activate BS
+    BS->>DB: Personalities.Add(entity)
+    BS->>DB: SaveChangesAsync()
+    activate DB
+    Note over DB: INSERT INTO Personalities<br/>Id auto-généré, timestamps
+    DB-->>BS: Entity avec Id
+    deactivate DB
+    BS-->>GS: Entity créée
+    deactivate BS
+
+    GS->>GS: Mappe Entity → PersonalityMessage
+    GS-->>CH: PersonalityMessage
+    deactivate GS
+
+    CH-->>GC: PersonalityMessage
+    deactivate CH
+    GC-->>DLG: PersonalityMessage
+    deactivate GC
+    DLG->>DLG: MudDialog.Close(DialogResult.Ok)
+    DLG-->>PL: DialogResult (non annulé)
+    deactivate DLG
+
+    PL->>U: Snackbar « Personnalité créée avec succès »
+    PL->>PL: _dataGrid.ReloadServerData()
+    deactivate PL
+```
+
+### Modification d'une personnalité
+
+**Scénario** : L'utilisateur clique l'icône « Modifier » sur une ligne du MudDataGrid. Le formulaire s'ouvre pré-rempli avec les données existantes.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as Navigateur
+    participant PL as PersonalityList
+    participant DLG as PersonalityFormDialog
+    participant GC as PersonalityGrpcClient
+    participant CH as Canal gRPC<br/>(Protobuf / HTTP/2)
+    participant GS as PersonalityService<br/>(gRPC Backend)
+    participant BS as PersonalityService<br/>(Service Métier)
+    participant DB as AppDbContext<br/>(EF Core SQLite)
+
+    U->>PL: Clique « Modifier » (icône crayon)
+    activate PL
+    PL->>DLG: DialogService.ShowAsync(Personality: item)
+    activate DLG
+    DLG->>DLG: Pré-remplit les champs depuis Personality
+
+    U->>DLG: Modifie les champs et clique « Modifier »
+    DLG->>DLG: MudForm validation côté client
+    DLG->>GC: UpdatePersonalityAsync(request)
+    activate GC
+    GC->>CH: UpdatePersonalityAsync(request)
+    activate CH
+
+    CH->>GS: UpdatePersonality(request, context)
+    activate GS
+    GS->>BS: GetByIdAsync(request.Id)
+    activate BS
+    BS->>DB: Personalities.FindAsync(id)
+    activate DB
+    DB-->>BS: Entity ou null
+    deactivate DB
+    BS-->>GS: Entity?
+    deactivate BS
+
+    alt Entity introuvable
+        GS-->>CH: RpcException(NotFound)
+        CH-->>GC: RpcException
+        GC-->>DLG: Exception
+    else Entity trouvée
+        GS->>GS: Valide FirstName, LastName, Bio
+        Note right of GS: Si invalide → RpcException<br/>StatusCode.InvalidArgument
+        GS->>GS: Met à jour les champs de l'entité
+        GS->>BS: UpdateAsync(entity)
+        activate BS
+        BS->>DB: Personalities.Update(entity)
+        BS->>DB: SaveChangesAsync()
+        activate DB
+        DB-->>BS: Entity mise à jour
+        deactivate DB
+        BS-->>GS: Entity
+        deactivate BS
+        GS->>GS: Mappe Entity → PersonalityMessage
+        GS-->>CH: PersonalityMessage
+    end
+    deactivate GS
+
+    CH-->>GC: PersonalityMessage
+    deactivate CH
+    GC-->>DLG: PersonalityMessage
+    deactivate GC
+    DLG->>DLG: MudDialog.Close(DialogResult.Ok)
+    DLG-->>PL: DialogResult (non annulé)
+    deactivate DLG
+
+    PL->>U: Snackbar « Personnalité mise à jour avec succès »
+    PL->>PL: _dataGrid.ReloadServerData()
+    deactivate PL
+```
+
+### Suppression d'une personnalité
+
+**Scénario** : L'utilisateur clique l'icône « Supprimer » sur une ligne, confirme via le `ConfirmDeleteDialog`, puis le backend supprime l'enregistrement.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as Navigateur
+    participant PL as PersonalityList
+    participant DLG as ConfirmDeleteDialog
+    participant GC as PersonalityGrpcClient
+    participant CH as Canal gRPC<br/>(Protobuf / HTTP/2)
+    participant GS as PersonalityService<br/>(gRPC Backend)
+    participant BS as PersonalityService<br/>(Service Métier)
+    participant DB as AppDbContext<br/>(EF Core SQLite)
+
+    U->>PL: Clique « Supprimer » (icône corbeille)
+    activate PL
+    PL->>DLG: DialogService.ShowAsync(ContentText: "Supprimer X Y ?")
+    activate DLG
+
+    U->>DLG: Clique « Supprimer » pour confirmer
+    DLG->>DLG: MudDialog.Close(DialogResult.Ok)
+    DLG-->>PL: DialogResult (non annulé)
+    deactivate DLG
+
+    PL->>GC: DeletePersonalityAsync(id)
+    activate GC
+    GC->>GC: Construit DeletePersonalityRequest(Id: id)
+    GC->>CH: DeletePersonalityAsync(request)
+    activate CH
+
+    CH->>GS: DeletePersonality(request, context)
+    activate GS
+    GS->>BS: DeleteAsync(request.Id)
+    activate BS
+    BS->>DB: Personalities.FindAsync(id)
+    activate DB
+    DB-->>BS: Entity ou null
+    deactivate DB
+
+    alt Entity introuvable
+        BS-->>GS: false
+        GS-->>CH: RpcException(NotFound)
+    else Entity trouvée
+        BS->>DB: Personalities.Remove(entity)
+        BS->>DB: SaveChangesAsync()
+        activate DB
+        Note over DB: DELETE FROM Personalities<br/>WHERE Id = @id
+        DB-->>BS: OK
+        deactivate DB
+        BS-->>GS: true
+        deactivate BS
+        GS-->>CH: DeletePersonalityResponse(Success: true)
+    end
+    deactivate GS
+
+    CH-->>GC: DeletePersonalityResponse
+    deactivate CH
+    GC-->>PL: DeletePersonalityResponse
+    deactivate GC
+
+    PL->>U: Snackbar « Personnalité supprimée »
+    PL->>PL: _dataGrid.ReloadServerData()
+    deactivate PL
+```
+
+### Gestion des erreurs gRPC
+
+**Scénario** : Le backend retourne une `RpcException` (champ invalide, entité introuvable). Le diagramme montre la propagation de l'erreur à travers les couches.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as Navigateur
+    participant PL as PersonalityList
+    participant GC as PersonalityGrpcClient
+    participant CH as Canal gRPC<br/>(Protobuf / HTTP/2)
+    participant GS as PersonalityService<br/>(gRPC Backend)
+
+    U->>PL: Action CRUD (Create / Update / Delete)
+    activate PL
+    PL->>GC: Appel async
+    activate GC
+    GC->>CH: Requête gRPC
+    activate CH
+    CH->>GS: Appel RPC
+    activate GS
+
+    alt Champ requis manquant
+        GS-->>CH: RpcException(InvalidArgument,<br/>"Le prénom est requis.")
+    else Entité introuvable
+        GS-->>CH: RpcException(NotFound,<br/>"Personnalité avec l'ID X introuvable.")
+    else Erreur inattendue
+        GS-->>CH: RpcException(Internal,<br/>"Erreur interne du serveur.")
+    end
+    deactivate GS
+
+    CH-->>GC: RpcException
+    deactivate CH
+
+    Note over GC: L'exception remonte au composant<br/>Blazor appelant
+
+    GC-->>PL: RpcException
+    deactivate GC
+    PL->>U: Snackbar d'erreur (Severity.Error)
+    deactivate PL
+```
+
+| StatusCode | Situation | Message exemple |
+|------------|-----------|-----------------|
+| `InvalidArgument` (3) | Champ requis vide | *"Le prénom est requis."* |
+| `NotFound` (5) | ID inexistant | *"Personnalité avec l'ID 999 introuvable."* |
+| `Internal` (13) | Exception non gérée | *"Erreur interne du serveur."* |
+
+---
+
+## 10. Diagramme de Déploiement
 
 Architecture de déploiement sur un poste développeur Windows, montrant les deux processus .NET et la communication gRPC/HTTP/2 entre eux.
 
@@ -804,7 +1134,7 @@ C4Deployment
 
 ---
 
-## 10. Schéma du pipeline gRPC complet
+## 11. Schéma du pipeline gRPC complet
 
 Vue d'ensemble du pipeline complet d'un appel gRPC dans Hello_gRPC, de l'interaction utilisateur jusqu'à la base de données :
 
@@ -915,7 +1245,7 @@ var entity = await service.GetByIdAsync(request.Id)
 
 ---
 
-## 11. Structure de la solution
+## 12. Structure de la solution
 
 ```
 Hello_gRPC.sln
@@ -975,7 +1305,7 @@ Hello_gRPC.sln
 
 ---
 
-## 12. Annexe — Correspondances .proto ↔ C#
+## 13. Annexe — Correspondances .proto ↔ C#
 
 ### Types scalaires
 
