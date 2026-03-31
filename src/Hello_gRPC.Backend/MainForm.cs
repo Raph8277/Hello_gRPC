@@ -9,18 +9,37 @@ public partial class MainForm : Form
     {
         InitializeComponent();
         Text = "Hello gRPC - Backend Server";
-        FormBorderStyle = FormBorderStyle.FixedSingle;
-        MaximizeBox = false;
+        // Fenêtre redimensionnable
+        FormBorderStyle = FormBorderStyle.Sizable;
+        MaximizeBox = true;
         StartPosition = FormStartPosition.CenterScreen;
-        Size = new Size(400, 200);
+        Size = new Size(600, 300);
 
-        var label = new Label
-        {
-            Text = "Serveur gRPC en cours d'exécution sur le port 5001...",
-            Dock = DockStyle.Fill,
-            TextAlign = ContentAlignment.MiddleCenter,
-            Font = new Font("Segoe UI", 12)
-        };
-        Controls.Add(label);
+        // Charge dynamiquement la liste des services gRPC exposés
+        LoadGrpcServices();
     }
-}
+
+    private void LoadGrpcServices()
+    {
+        grpcServicesGrid.Rows.Clear();
+        var services = Program.GrpcServiceTypes;
+        int grpcPort = 5001; // Port gRPC défini dans Program.cs
+        if (services.Length > 0)
+        {
+            foreach (var type in services)
+            {
+                grpcServicesGrid.Rows.Add(
+                    type.Name,
+                    type.FullName ?? string.Empty,
+                    type.Assembly.GetName().Name ?? string.Empty,
+                    grpcPort.ToString()
+                );
+            }
+        }
+        else
+        {
+            grpcServicesGrid.Rows.Add("Aucun service gRPC exposé", "", "", "");
+        }
+    }
+
+    }

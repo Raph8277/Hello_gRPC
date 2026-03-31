@@ -1,4 +1,63 @@
-﻿# Architecture Hello_gRPC — Documentation C4
+﻿# ---
+
+## Découpage en couches de la solution
+
+La solution Hello_gRPC suit une architecture en couches claire, chaque projet ayant un rôle précis :
+
+- **Hello_gRPC.Frontend**  
+    Application Blazor Server (UI web) utilisant MudBlazor.  
+    Rôle : Interface utilisateur, pages, composants, dialogues, injection du client gRPC.
+
+- **Hello_gRPC.Backend**  
+    Application WinForms qui héberge le serveur gRPC (Kestrel) et la couche métier.  
+    Rôle : Expose les services gRPC CRUD, héberge le serveur, gère la persistance via EF Core.
+
+- **Hello_gRPC.Service**  
+    Couche métier (business logic) et accès direct aux données.  
+    Rôle : Fournit les méthodes CRUD, validation métier, accès direct au DbContext.
+
+- **Hello_gRPC.Data**  
+    Couche d’accès aux données (EF Core).  
+    Rôle : Définit les entités, le DbContext, la configuration, le seed de la base.
+
+- **Hello_gRPC.Shared**  
+    **Rôle : Contrats partagés et interopérabilité**  
+    Ce projet contient :
+    - Les fichiers `.proto` (définition des services et messages gRPC)
+    - Les contrats générés (classes C# pour les messages et services)
+    - Les types partagés entre le frontend et le backend (DTO, enums, etc.)
+
+    Il sert de **source unique de vérité** pour les échanges entre le frontend et le backend, garantissant la cohérence des API et la génération automatique des clients/serveurs gRPC.
+
+```mermaid
+C4Container
+        title Découpage en couches — Hello_gRPC
+
+        Person(user, "Utilisateur", "Utilise l'application via le navigateur.")
+
+        System_Boundary(hello, "Hello_gRPC") {
+                Container(frontend, "Frontend (Blazor)", ".NET, MudBlazor", "UI web, pages, composants, dialogs.")
+                Container(backend, "Backend (WinForms + gRPC)", ".NET, Kestrel, EF Core", "Héberge les services gRPC, accès données.")
+                Container(service, "Service", ".NET", "Logique métier, validation, accès direct au DbContext.")
+                Container(data, "Data", "EF Core", "Entités, DbContext, seed, migrations.")
+                Container(shared, "Shared", ".NET, Grpc.Tools", "Contrats .proto, messages, types partagés.")
+        }
+
+        Rel(user, frontend, "Utilise")
+        Rel(frontend, shared, "Référence")
+        Rel(frontend, backend, "Appelle gRPC")
+        Rel(backend, shared, "Référence")
+        Rel(backend, service, "Appelle")
+        Rel(service, data, "Accède")
+        Rel(data, shared, "Référence")
+
+        UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+```
+
+> **Hello_gRPC.Shared**  
+> Ce projet joue un rôle central dans l’architecture : il contient tous les contrats d’API gRPC (fichiers `.proto`), les messages, et les classes générées utilisées à la fois par le backend (implémentation des services) et le frontend (clients gRPC).  
+> Cela garantit que les deux parties parlent exactement le même langage, sans duplication de code ni risque de désynchronisation des modèles de données.
+# Architecture Hello_gRPC — Documentation C4
 
 > **Projet** : Hello_gRPC — Application CRUD fullstack de gestion de personnalités célèbres
 > **Date** : Mars 2026

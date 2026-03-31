@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>HelloGrpc.Backend</RootNamespace>
     <Nullable>enable</Nullable>
@@ -11,8 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.*">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.*">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hello_gRPC.Shared\Hello_gRPC.Shared.csproj" />
+    <ProjectReference Include="..\Hello_gRPC.Service\Hello_gRPC.Service.csproj" />
   </ItemGroup>
 
 </Project>
