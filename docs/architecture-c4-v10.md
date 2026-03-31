@@ -69,14 +69,21 @@ C4Container
     Person(user, "Utilisateur", "Gère les personnalités via le navigateur web.")
 
     System_Boundary(hello, "Hello_gRPC") {
-        Container(blazor, "Blazor Server App", ".NET 10, MudBlazor", "Interface web CRUD :<br/>MudDataGrid, Dialogs, formulaires.")
-        Container(grpcClient, "gRPC Client", "Grpc.Net.Client", "Client typé généré depuis les .proto.<br/>Wrapper PersonalityGrpcClient.")
-        Container(winforms, "WinForms Host", ".NET 10 WinForms", "Application bureau hébergeant<br/>le serveur Kestrel en arrière-plan.")
-        Container(kestrel, "Kestrel gRPC Server", "Grpc.AspNetCore, HTTP/2", "Expose les services gRPC CRUD<br/>sur le port 5001.")
-        Container(service, "Service Layer", ".NET 10", "Logique métier, validation, mapping.")
-        Container(data, "Data Layer", "EF Core 10 + SQLite", "DbContext, entités, migrations,<br/>seed des personnalités.")
+        Container_Boundary(frontendProc, "Frontend (Blazor Server Process)") {
+            Container(blazor, "Blazor Server App", ".NET 10, MudBlazor", "Interface web CRUD :<br/>MudDataGrid, Dialogs, formulaires.")
+            Container(grpcClient, "gRPC Client", "Grpc.Net.Client", "Client typé généré depuis les .proto.<br/>Wrapper PersonalityGrpcClient.")
+        }
+
+        Container(shared, "Shared Library", ".NET 10, Grpc.Tools", "Fichiers .proto, contrats gRPC,<br/>classes générées Client + Server.<br/>Référencé par Frontend et Backend.")
+
+        Container_Boundary(backendProc, "Backend (WinForms Process)") {
+            Container(winforms, "WinForms Host", ".NET 10 WinForms", "Application bureau hébergeant<br/>le serveur Kestrel en arrière-plan.")
+            Container(kestrel, "Kestrel gRPC Server", "Grpc.AspNetCore, HTTP/2", "Expose les services gRPC CRUD<br/>sur le port 5001.")
+            Container(service, "Service Layer", ".NET 10", "Logique métier, validation, mapping.")
+            Container(data, "Data Layer", "EF Core 10 + SQLite", "DbContext, entités, migrations,<br/>seed des personnalités.")
+        }
+
         ContainerDb(sqlite, "SQLite Database", "SQLite", "Stocke les personnalités,<br/>fichier hello_grpc.db.")
-        Container(shared, "Shared Library", ".NET 10, Grpc.Tools", "Fichiers .proto, contrats gRPC,<br/>classes générées Client + Server.")
     }
 
     Rel(user, blazor, "Navigue", "HTTPS")
@@ -86,13 +93,10 @@ C4Container
     Rel(kestrel, service, "Utilise")
     Rel(service, data, "Utilise")
     Rel(data, sqlite, "Lit / Écrit", "SQLite")
-    Rel(blazor, shared, "Référence")
-    Rel(kestrel, shared, "Référence")
 
     UpdateRelStyle(user, blazor, $offsetY="-40")
     UpdateRelStyle(grpcClient, kestrel, $offsetY="-40")
-    UpdateRelStyle(service, data, $offsetY="-30")
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
 ```
 
 ---
@@ -173,18 +177,17 @@ Flux détaillé de la création d'une nouvelle personnalité.
 ```mermaid
 C4Dynamic
     title Hello_gRPC — Flux Création d'une personnalité
+
     Person(user, "Utilisateur", "Crée une nouvelle personnalité.")
     Container(blazor, "Blazor Frontend", ".NET 10, MudBlazor", "Interface web.")
     Container(grpc, "gRPC Server", "Kestrel, HTTP/2", "Service backend.")
     ContainerDb(db, "SQLite", "SQLite", "hello_grpc.db")
-    Rel(user, blazor, "Remplit le formulaire et valide")
-    Rel(blazor, grpc, "CreatePersonality(request)", "gRPC")
-    Rel(grpc, grpc, "Valide les champs requis")
-    Rel(grpc, db, "INSERT INTO Personalities", "EF Core")
-    Rel(db, grpc, "Retourne l'entité créée")
-    Rel(grpc, blazor, "PersonalityMessage", "gRPC")
-    Rel(blazor, user, "Affiche Snackbar succès et rafraîchit la grille")
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+    Rel(user, blazor, "1. Remplit le formulaire et valide")
+    Rel(blazor, grpc, "2. CreatePersonality(request)", "gRPC")
+    Rel(grpc, db, "3. Valide, mappe, INSERT", "EF Core")
+
+    UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="1")
 ```
 
 ---
@@ -196,17 +199,17 @@ Flux détaillé de la consultation de la liste des personnalités avec paginatio
 ```mermaid
 C4Dynamic
     title Hello_gRPC — Flux Lecture avec pagination
+
     Person(user, "Utilisateur", "Consulte la liste des personnalités.")
     Container(blazor, "Blazor Frontend", ".NET 10, MudBlazor", "Interface web.")
     Container(grpc, "gRPC Server", "Kestrel, HTTP/2", "Service backend.")
     ContainerDb(db, "SQLite", "SQLite", "hello_grpc.db")
-    Rel(user, blazor, "Navigue vers /personalities")
-    Rel(blazor, grpc, "GetPersonalities(skip, take, search, category)", "gRPC")
-    Rel(grpc, db, "SELECT avec pagination et filtres", "EF Core")
-    Rel(db, grpc, "Retourne les entités")
-    Rel(grpc, blazor, "GetPersonalitiesResponse", "gRPC")
-    Rel(blazor, user, "Affiche le MudDataGrid paginé")
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+    Rel(user, blazor, "1. Navigue vers /personalities")
+    Rel(blazor, grpc, "2. GetPersonalities(skip, take, search, category)", "gRPC")
+    Rel(grpc, db, "3. SELECT avec pagination et filtres", "EF Core")
+
+    UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="1")
 ```
 
 ---

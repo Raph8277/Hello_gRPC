@@ -61,17 +61,15 @@ C4Container
         Container(backend, "Backend (WinForms + gRPC)", ".NET 10, Kestrel, Grpc.AspNetCore", "Héberge les services gRPC, validation.")
         Container(service, "Service", ".NET 10", "Logique métier, CRUD, validation métier.")
         Container(data, "Data", "EF Core 10, SQLite", "Entités, DbContext, seed, migrations.")
-        Container(shared, "Shared (.proto)", "Grpc.Tools, Protobuf", "Contrats .proto, messages, stubs générés.")
+        Container(shared, "Shared (.proto)", "Grpc.Tools, Protobuf", "Contrats .proto, stubs générés.<br/>Référencé par Frontend, Backend et Service.")
     }
 
     Rel(user, frontend, "Utilise")
-    Rel(frontend, shared, "Référence .proto")
     Rel(frontend, backend, "Appelle gRPC (Protobuf / HTTP/2)")
-    Rel(backend, shared, "Référence .proto")
     Rel(backend, service, "Délègue logique métier")
     Rel(service, data, "Accède aux données")
 
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="1")
 ```
 
 ---
@@ -420,19 +418,19 @@ C4Container
 
     System_Boundary(hello, "Hello_gRPC") {
 
-        Container(blazor, "Blazor Server App", ".NET 10, MudBlazor", "Interface web CRUD :<br/>MudDataGrid, Dialogs, formulaires.")
+        Container_Boundary(frontendProc, "Frontend (Blazor Server Process)") {
+            Container(blazor, "Blazor Server App", ".NET 10, MudBlazor", "Interface web CRUD :<br/>MudDataGrid, Dialogs, formulaires.")
+            Container(grpcClientLib, "gRPC Client", "Grpc.Net.Client", "Client typé généré depuis les .proto.<br/>Wrapper PersonalityGrpcClient.")
+        }
 
-        Container(grpcClientLib, "gRPC Client", "Grpc.Net.Client", "Client typé généré depuis les .proto.<br/>Wrapper PersonalityGrpcClient.")
+        Container(shared, "Shared Library", "Grpc.Tools, Protobuf", "Fichiers .proto, contrats gRPC,<br/>classes générées Client + Server.<br/>Référencé par Frontend et Backend.")
 
-        Container(shared, "Shared Library", "Grpc.Tools, Protobuf", "Fichiers .proto, contrats gRPC,<br/>classes générées Client + Server.")
-
-        Container(backendGrpc, "Backend gRPC Server", "Grpc.AspNetCore, HTTP/2", "Services gRPC CRUD,<br/>validation, mapping proto-entité.")
-
-        Container(serviceLayer, "Service Layer", ".NET 10", "Logique métier CRUD :<br/>PersonalityService, DI extensions.")
-
-        Container(dataLayer, "Data Layer", "EF Core 10 + SQLite", "AppDbContext, entités, migrations,<br/>DatabaseSeeder (100 personnalités).")
-
-        Container(winforms, "WinForms Host", ".NET 10 WinForms", "Application bureau hébergeant<br/>Kestrel en arrière-plan.")
+        Container_Boundary(backendProc, "Backend (WinForms Process)") {
+            Container(winforms, "WinForms Host", ".NET 10 WinForms", "Application bureau hébergeant<br/>Kestrel en arrière-plan.")
+            Container(backendGrpc, "Kestrel gRPC Server", "Grpc.AspNetCore, HTTP/2", "Services gRPC CRUD,<br/>validation, mapping proto-entité.")
+            Container(serviceLayer, "Service Layer", ".NET 10", "Logique métier CRUD :<br/>PersonalityService, DI extensions.")
+            Container(dataLayer, "Data Layer", "EF Core 10 + SQLite", "AppDbContext, entités, migrations,<br/>DatabaseSeeder (100 personnalités).")
+        }
 
         ContainerDb(sqlite, "SQLite Database", "SQLite", "Stocke les personnalités,<br/>fichier hello_grpc.db.")
     }
@@ -444,13 +442,10 @@ C4Container
     Rel(backendGrpc, serviceLayer, "Délègue la logique métier")
     Rel(serviceLayer, dataLayer, "Accède aux données")
     Rel(dataLayer, sqlite, "Lit / Écrit", "SQLite")
-    Rel(blazor, shared, "Référence .proto")
-    Rel(backendGrpc, shared, "Référence .proto")
 
     UpdateRelStyle(user, blazor, $offsetY="-40")
     UpdateRelStyle(grpcClientLib, backendGrpc, $offsetY="-40")
-    UpdateRelStyle(dataLayer, sqlite, $offsetY="-30")
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
 ```
 
 ---
@@ -478,7 +473,7 @@ C4Component
     Container(grpcClient, "gRPC Client (Frontend)", "Grpc.Net.Client", "Appels gRPC depuis le frontend.")
 
     Container_Boundary(backendBoundary, "Hello_gRPC.Backend") {
-        Component(grpcService, "PersonalityService", "gRPC Service", "Hérite PersonalityGrpc.PersonalityGrpcBase.<br/>Validation des requêtes,<br/>mapping proto-entité,<br/>délégation au Service layer.")
+        Component(grpcService, "PersonalityService", "gRPC Service", "Hérite PersonalityGrpcBase (Shared).<br/>Validation des requêtes,<br/>mapping proto-entité,<br/>délégation au Service layer.")
 
         Component(mappingExt, "MappingExtensions", "Extension Methods", "ToProto(), ToEntity(), UpdateFrom().<br/>Pont entre Protobuf et EF Core.")
     }
@@ -497,16 +492,9 @@ C4Component
         Component(seeder, "DatabaseSeeder", "Static Class", "Seed 100 personnalités au premier<br/>lancement si la base est vide.")
     }
 
-    Container_Boundary(sharedBoundary, "Hello_gRPC.Shared") {
-        Component(proto, "personality.proto", "Protobuf", "Définit PersonalityGrpc service,<br/>5 RPC methods, 8 messages.")
-
-        Component(generated, "Classes générées", "Grpc.Tools", "PersonalityGrpc.PersonalityGrpcBase,<br/>PersonalityGrpc.PersonalityGrpcClient,<br/>Messages Protobuf C#.")
-    }
-
     ContainerDb(sqlite, "SQLite", "SQLite", "hello_grpc.db")
 
     Rel(grpcClient, grpcService, "Appelle", "gRPC / HTTP/2")
-    Rel(grpcService, generated, "Hérite de PersonalityGrpcBase")
     Rel(grpcService, mappingExt, "Convertit proto-entité")
     Rel(grpcService, bizService, "Délègue CRUD")
     Rel(bizService, dbContext, "Requête via")
@@ -515,8 +503,7 @@ C4Component
     Rel(seeder, dbContext, "Seed via")
 
     UpdateRelStyle(grpcClient, grpcService, $offsetY="-40")
-    UpdateRelStyle(dbContext, sqlite, $offsetY="-30")
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
 ```
 
 ### Comment le .proto traverse les couches
@@ -567,35 +554,30 @@ C4Component
 
     Container_Boundary(frontend, "Hello_gRPC.Frontend") {
 
+        Component(layout, "MainLayout", "Blazor Layout", "AppBar, Drawer, NavMenu,<br/>ThemeProvider dark/light mode.")
+
         Component(listPage, "PersonalityList", "Blazor Page", "MudDataGrid avec pagination serveur,<br/>recherche, filtre par catégorie.")
 
         Component(formDialog, "PersonalityFormDialog", "MudDialog", "Formulaire création et édition<br/>avec MudForm validation.")
 
         Component(deleteDialog, "ConfirmDeleteDialog", "MudDialog", "Confirmation de suppression<br/>avec nom de la personnalité.")
 
-        Component(grpcWrapper, "PersonalityGrpcClient", "Service Scoped", "Wrapper typé autour du client gRPC.<br/>Get, Create, Update, Delete.")
-
-        Component(layout, "MainLayout", "Blazor Layout", "AppBar, Drawer, NavMenu,<br/>ThemeProvider dark/light mode.")
-    }
-
-    Container_Boundary(sharedRef, "Hello_gRPC.Shared (référencé)") {
-        Component(generatedClient, "PersonalityGrpc.PersonalityGrpcClient", "Classe générée", "Client gRPC typé généré<br/>automatiquement depuis le .proto.")
+        Component(grpcWrapper, "PersonalityGrpcClient", "Service Scoped", "Wrapper autour du client gRPC généré<br/>(PersonalityGrpc.PersonalityGrpcClient).<br/>Get, Create, Update, Delete.")
     }
 
     Container(kestrel, "Kestrel gRPC Server", "Grpc.AspNetCore", "Backend gRPC sur port 5001.")
 
     Rel(user, layout, "Navigue")
     Rel(layout, listPage, "Route /personalities")
+    Rel(listPage, grpcWrapper, "Charge les données")
     Rel(listPage, formDialog, "Ouvre")
     Rel(listPage, deleteDialog, "Ouvre")
-    Rel(listPage, grpcWrapper, "Charge les données")
     Rel(formDialog, grpcWrapper, "Crée / Met à jour")
     Rel(deleteDialog, grpcWrapper, "Supprime")
-    Rel(grpcWrapper, generatedClient, "Utilise le client généré")
-    Rel(generatedClient, kestrel, "Appelle", "gRPC / HTTP/2 (Protobuf)")
+    Rel(grpcWrapper, kestrel, "Appelle", "gRPC / HTTP/2 (Protobuf)")
 
     UpdateRelStyle(user, layout, $offsetY="-40")
-    UpdateRelStyle(generatedClient, kestrel, $offsetY="-40")
+    UpdateRelStyle(grpcWrapper, kestrel, $offsetY="-40")
     UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
 ```
 
@@ -663,31 +645,18 @@ Flux détaillé de la création d'une personnalité, montrant chaque étape de l
 C4Dynamic
     title Flux gRPC — Sérialisation Protobuf (Création)
 
-    Container(blazor, "Blazor Frontend", ".NET 10", "UI MudBlazor")
-    Container(grpcClientWrapper, "PersonalityGrpcClient", "Grpc.Net.Client", "Wrapper client gRPC")
-    Container(channel, "HTTP/2 Channel", "Grpc.Net.Client", "Canal HTTP/2 vers localhost:5001")
-    Container(kestrel, "Kestrel gRPC Server", "Grpc.AspNetCore", "Port 5001, HTTP/2")
-    Container(backendSvc, "PersonalityService", "gRPC Service", "Validation + mapping")
-    Container(bizSvc, "PersonalityService", "Service Layer", "Logique métier CRUD")
+    Container(blazor, "Blazor Frontend", ".NET 10, MudBlazor", "PersonalityFormDialog")
+    Container(grpcClient, "Canal gRPC", "Grpc.Net.Client, HTTP/2", "Sérialisation Protobuf")
+    Container(backendSvc, "Backend PersonalityService", "gRPC Service", "Validation + mapping proto-entité")
+    Container(bizSvc, "Service PersonalityService", "Service Layer", "CRUD métier")
     ContainerDb(db, "SQLite", "SQLite", "hello_grpc.db")
 
-    Rel(blazor, grpcClientWrapper, "1. Appelle CreatePersonalityAsync(request)")
-    Rel(grpcClientWrapper, channel, "2. Sérialise en Protobuf binaire")
-    Rel(channel, kestrel, "3. Envoie via HTTP/2 frame DATA")
-    Rel(kestrel, backendSvc, "4. Désérialise le message Protobuf")
-    Rel(backendSvc, backendSvc, "5. Valide les champs requis")
-    Rel(backendSvc, bizSvc, "6. Délègue AddAsync(entity)")
-    Rel(bizSvc, db, "7. INSERT INTO Personalities", "EF Core")
-    Rel(db, bizSvc, "8. Retourne entité avec Id")
-    Rel(bizSvc, backendSvc, "9. Retourne entité créée")
-    Rel(backendSvc, kestrel, "10. Mappe en PersonalityMessage")
-    Rel(kestrel, channel, "11. Sérialise réponse Protobuf")
-    Rel(channel, grpcClientWrapper, "12. Retourne via HTTP/2")
-    Rel(grpcClientWrapper, blazor, "13. Retourne PersonalityMessage")
+    Rel(blazor, grpcClient, "1. Appelle CreatePersonalityAsync(request)")
+    Rel(grpcClient, backendSvc, "2. Sérialise en Protobuf, envoie via HTTP/2")
+    Rel(backendSvc, bizSvc, "3. Valide, mappe proto→entité, délègue AddAsync")
+    Rel(bizSvc, db, "4. INSERT INTO Personalities", "EF Core")
 
-    UpdateRelStyle(blazor, grpcClientWrapper, $offsetY="-50")
-    UpdateRelStyle(channel, kestrel, $offsetY="-40")
-    UpdateRelStyle(bizSvc, db, $offsetY="-40")
+    UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="1")
 ```
 
 ### Détail du mapping proto ↔ entité (étapes 7 et 10)
@@ -738,29 +707,20 @@ Flux détaillé de la consultation de la liste des personnalités avec paginatio
 C4Dynamic
     title Flux gRPC — Lecture paginée avec filtres
 
-    Person(user, "Utilisateur", "Consulte la liste des personnalités.")
-    Container(blazor, "Blazor Frontend", ".NET 10, MudBlazor", "MudDataGrid")
-    Container(grpcClient, "PersonalityGrpcClient", "Grpc.Net.Client", "Client gRPC typé")
-    Container(backendSvc, "Backend PersonalityService", "gRPC Service", "Validation + filtrage")
+    Person(user, "Utilisateur", "Consulte les personnalités.")
+    Container(blazor, "Blazor Frontend", ".NET 10, MudBlazor", "MudDataGrid paginé")
+    Container(grpcClient, "Canal gRPC", "Grpc.Net.Client, HTTP/2", "Sérialisation Protobuf")
+    Container(backendSvc, "Backend PersonalityService", "gRPC Service", "Filtrage + pagination")
     Container(bizSvc, "Service PersonalityService", "Service Layer", "GetAllAsync")
     ContainerDb(db, "SQLite", "SQLite", "hello_grpc.db")
 
     Rel(user, blazor, "1. Navigue vers /personalities")
     Rel(blazor, grpcClient, "2. GetPersonalitiesAsync(search, category, skip, take)")
-    Rel(grpcClient, backendSvc, "3. GetPersonalities (Protobuf via HTTP/2)", "gRPC")
-    Rel(backendSvc, bizSvc, "4. GetAllAsync()")
-    Rel(bizSvc, db, "5. SELECT * FROM Personalities", "EF Core")
-    Rel(db, bizSvc, "6. Retourne List Personality")
-    Rel(bizSvc, backendSvc, "7. Retourne entités")
-    Rel(backendSvc, backendSvc, "8. Filtre, pagine, mappe en Proto")
-    Rel(backendSvc, grpcClient, "9. GetPersonalitiesResponse (Protobuf)", "gRPC")
-    Rel(grpcClient, blazor, "10. Retourne réponse typée")
-    Rel(blazor, user, "11. Affiche MudDataGrid paginé")
+    Rel(grpcClient, backendSvc, "3. GetPersonalities (Protobuf / HTTP/2)")
+    Rel(backendSvc, bizSvc, "4. Délègue GetAllAsync")
+    Rel(bizSvc, db, "5. SELECT avec pagination et filtres", "EF Core")
 
-    UpdateRelStyle(user, blazor, $offsetY="-50")
-    UpdateRelStyle(grpcClient, backendSvc, $offsetY="-40")
-    UpdateRelStyle(bizSvc, db, $offsetY="-40")
-    UpdateRelStyle(blazor, user, $offsetY="40")
+    UpdateLayoutConfig($c4ShapeInRow="1", $c4BoundaryInRow="1")
 ```
 
 ### Structure de la requête et réponse gRPC
@@ -809,6 +769,14 @@ C4Deployment
 
     Deployment_Node(dev, "Poste Développeur", "Windows 10/11") {
 
+        Deployment_Node(browser, "Navigateur Web", "Chrome / Edge / Firefox") {
+            Container(spa, "Blazor UI", "SignalR / WebSocket", "Rendu interactif côté serveur")
+        }
+
+        Deployment_Node(blazorHost, "Blazor Server Process", ".NET 10 Web") {
+            Container(blazorApp, "Blazor Server App", "MudBlazor", "Interface CRUD sur port 5158")
+        }
+
         Deployment_Node(winforms, "WinForms Process", ".NET 10 WinExe") {
             Deployment_Node(kestrel, "Kestrel Server", "HTTP/2, Port 5001") {
                 Container(grpcServer, "gRPC Services", "Grpc.AspNetCore", "PersonalityService CRUD")
@@ -820,14 +788,6 @@ C4Deployment
                 Container(efcore, "AppDbContext", "EF Core", "ORM SQLite")
             }
             ContainerDb(sqlite, "SQLite Database", "SQLite", "hello_grpc.db")
-        }
-
-        Deployment_Node(blazorHost, "Blazor Server Process", ".NET 10 Web") {
-            Container(blazorApp, "Blazor Server App", "MudBlazor", "Interface CRUD sur port 5158")
-        }
-
-        Deployment_Node(browser, "Navigateur Web", "Chrome / Edge / Firefox") {
-            Container(spa, "Blazor UI", "SignalR / WebSocket", "Rendu interactif côté serveur")
         }
     }
 
