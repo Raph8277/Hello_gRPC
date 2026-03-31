@@ -1,12 +1,14 @@
-﻿# EF Core Patterns for Hello_gRPC
+# EF Core Patterns for Hello_gRPC
+
+All EF Core code lives in the **Data layer** (`Hello_gRPC.Data`).
 
 ## Entity Pattern
 
 ```csharp
-namespace HelloGrpc.Backend.Entities;
+namespace HelloGrpc.Data.Entities;
 
 /// <summary>
-/// Représente une personnalité célèbre.
+/// Represente une personnalite celebre.
 /// </summary>
 public class Personality
 {
@@ -27,10 +29,10 @@ public class Personality
 ## DbContext Pattern
 
 ```csharp
-namespace HelloGrpc.Backend.Data;
+namespace HelloGrpc.Data;
 
 /// <summary>
-/// Contexte de base de données pour l'application Hello_gRPC.
+/// Contexte de base de donnees pour l'application Hello_gRPC.
 /// </summary>
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
@@ -82,8 +84,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 ## Seed Data Pattern
 
 ```csharp
+namespace HelloGrpc.Data;
+
 /// <summary>
-/// Initialise la base de données avec les données de seed.
+/// Initialise la base de donnees avec les donnees de seed.
 /// </summary>
 public static class DatabaseSeeder
 {
@@ -99,10 +103,68 @@ public static class DatabaseSeeder
 }
 ```
 
-## Conventions
+## Service Layer Pattern
 
-- Use primary constructors for DI
-- Use `required` keyword for non-nullable string properties
-- Use `DateOnly` for dates, not `DateTime`
-- SQLite connection string: `Data Source=hello_grpc.db`
-- Always call `Database.MigrateAsync()` at startup
+```csharp
+namespace HelloGrpc.Service;
+
+/// <summary>
+/// Service metier pour la gestion des personnalites.
+/// </summary>
+public class PersonalityService(AppDbContext dbContext)
+{
+    public async Task<List<Personality>> GetAllAsync() => await dbContext.Personalities.ToListAsync();
+    public async Task<Personality?> GetByIdAsync(int id) => await dbContext.Personalities.FindAsync(id);
+    public async Task<Personality> AddAsync(Personality personality)
+    {
+        dbContext.Personalities.Add(personality);
+        await dbContext.SaveChangesAsync();
+        return personality;
+    }
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var entity = await dbContext.Personalities.FindAsync(id);
+        if (entity is null) return false;
+        dbContext.Personalities.Remove(entity);
+        await dbContext.SaveChangesAsync();
+        return true;
+    }
+    public async Task<Personality> UpdateAsync(Personality personality)
+    {
+        dbContext.Personalities.Update(personality);
+        await dbContext.SaveChangesAsync();
+        return personality;
+    }
+}
+```
+
+## DI Extensions Pattern
+
+```csharp
+namespace HelloGrpc.Service;
+
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddHelloGrpcAppContext(this IServiceCollection services, string connectionString)
+    {
+        services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
+        return services;
+    }
+
+    public static IServiceCollection AddHelloGrpc{Entity}Service(this IServiceCollection services)
+    {
+        services.AddScoped<{Entity}Service>();
+        return services;
+    }
+}
+```
+
+## Migration Commands
+
+```bash
+# Generate migration (Backend is the startup project for SQLite path resolution)
+dotnet ef migrations add <Name> --project src/Hello_gRPC.Data/ --startup-project src/Hello_gRPC.Backend/
+
+# Apply migrations (done automatically in Program.cs)
+dotnet ef database update --project src/Hello_gRPC.Data/ --startup-project src/Hello_gRPC.Backend/
+```

@@ -1,4 +1,7 @@
-﻿# gRPC Service Template
+# gRPC Service Template
+
+The gRPC service lives in the **Backend layer** (`Hello_gRPC.Backend/Services/`).
+It delegates business logic to the **Service layer** and uses **mapping extensions** to convert between protobuf messages and EF Core entities.
 
 ## Service Implementation Pattern
 
@@ -6,19 +9,22 @@
 namespace HelloGrpc.Backend.Services;
 
 /// <summary>
-/// Service gRPC pour la gestion des personnalités.
+/// Service gRPC pour la gestion des personnalites.
+/// Delegue la logique metier a la couche Service.
 /// </summary>
-public class PersonalityService(AppDbContext context) : PersonalityGrpc.PersonalityGrpcBase
+public class PersonalityService(HelloGrpc.Service.PersonalityService personalityService)
+    : PersonalityGrpc.PersonalityGrpcBase
 {
     /// <summary>
-    /// Récupère toutes les personnalités avec pagination et filtrage.
+    /// Recupere toutes les personnalites avec pagination et filtrage.
     /// </summary>
     public override async Task<GetPersonalitiesResponse> GetPersonalities(
         GetPersonalitiesRequest request, ServerCallContext context_call)
     {
-        var query = context.Personalities.AsQueryable();
+        var items = await personalityService.GetAllAsync();
 
         // Filtrage
+        var query = items.AsQueryable();
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
             var term = request.SearchTerm.ToLower();
@@ -27,41 +33,36 @@ public class PersonalityService(AppDbContext context) : PersonalityGrpc.Personal
                 p.LastName.ToLower().Contains(term) ||
                 p.Bio.ToLower().Contains(term));
         }
-
         if (!string.IsNullOrWhiteSpace(request.Category))
             query = query.Where(p => p.Category == request.Category);
 
-        // Total count before pagination
-        var totalCount = await query.CountAsync();
-
-        // Pagination
-        var items = await query
-            .OrderBy(p => p.LastName)
-            .ThenBy(p => p.FirstName)
+        var totalCount = query.Count();
+        var paged = query
+            .OrderBy(p => p.LastName).ThenBy(p => p.FirstName)
             .Skip(request.Skip)
             .Take(request.Take > 0 ? request.Take : 20)
-            .ToListAsync();
+            .ToList();
 
         var response = new GetPersonalitiesResponse { TotalCount = totalCount };
-        response.Personalities.AddRange(items.Select(p => p.ToProto()));
+        response.Personalities.AddRange(paged.Select(p => p.ToProto()));
         return response;
     }
 
     /// <summary>
-    /// Récupère une personnalité par son identifiant.
+    /// Recupere une personnalite par son identifiant.
     /// </summary>
     public override async Task<PersonalityMessage> GetPersonality(
         GetPersonalityRequest request, ServerCallContext context_call)
     {
-        var entity = await context.Personalities.FindAsync(request.Id)
+        var entity = await personalityService.GetByIdAsync(request.Id)
             ?? throw new RpcException(new Status(StatusCode.NotFound,
-                $"Personnalité avec l'ID {request.Id} introuvable."));
+                `Personnalite avec l'ID {request.Id} introuvable.`));
 
         return entity.ToProto();
     }
 
     /// <summary>
-    /// Crée une nouvelle personnalité.
+    /// Cree une nouvelle personnalite.
     /// </summary>
     public override async Task<PersonalityMessage> CreatePersonality(
         CreatePersonalityRequest request, ServerCallContext context_call)
@@ -69,64 +70,62 @@ public class PersonalityService(AppDbContext context) : PersonalityGrpc.Personal
         ValidateRequest(request.FirstName, request.LastName, request.Bio, request.Category);
 
         var entity = request.ToEntity();
-        context.Personalities.Add(entity);
-        await context.SaveChangesAsync();
-        return entity.ToProto();
+        var created = await personalityService.AddAsync(entity);
+        return created.ToProto();
     }
 
     /// <summary>
-    /// Met à jour une personnalité existante.
+    /// Met a jour une personnalite existante.
     /// </summary>
     public override async Task<PersonalityMessage> UpdatePersonality(
         UpdatePersonalityRequest request, ServerCallContext context_call)
     {
-        var entity = await context.Personalities.FindAsync(request.Id)
+        var entity = await personalityService.GetByIdAsync(request.Id)
             ?? throw new RpcException(new Status(StatusCode.NotFound,
-                $"Personnalité avec l'ID {request.Id} introuvable."));
+                `Personnalite avec l'ID {request.Id} introuvable.`));
 
         ValidateRequest(request.FirstName, request.LastName, request.Bio, request.Category);
 
         entity.UpdateFrom(request);
-        await context.SaveChangesAsync();
-        return entity.ToProto();
+        var updated = await personalityService.UpdateAsync(entity);
+        return updated.ToProto();
     }
 
     /// <summary>
-    /// Supprime une personnalité.
+    /// Supprime une personnalite.
     /// </summary>
     public override async Task<DeletePersonalityResponse> DeletePersonality(
         DeletePersonalityRequest request, ServerCallContext context_call)
     {
-        var entity = await context.Personalities.FindAsync(request.Id)
-            ?? throw new RpcException(new Status(StatusCode.NotFound,
-                $"Personnalité avec l'ID {request.Id} introuvable."));
+        var success = await personalityService.DeleteAsync(request.Id);
+        if (!success)
+            throw new RpcException(new Status(StatusCode.NotFound,
+                `Personnalite avec l'ID {request.Id} introuvable.`));
 
-        context.Personalities.Remove(entity);
-        await context.SaveChangesAsync();
         return new DeletePersonalityResponse { Success = true };
     }
 
     private static void ValidateRequest(string firstName, string lastName, string bio, string category)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            throw new RpcException(new Status(StatusCode.InvalidArgument, "Le prénom est requis."));
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Le prenom est requis."));
         if (string.IsNullOrWhiteSpace(lastName))
             throw new RpcException(new Status(StatusCode.InvalidArgument, "Le nom est requis."));
         if (string.IsNullOrWhiteSpace(bio))
             throw new RpcException(new Status(StatusCode.InvalidArgument, "La biographie est requise."));
         if (string.IsNullOrWhiteSpace(category))
-            throw new RpcException(new Status(StatusCode.InvalidArgument, "La catégorie est requise."));
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "La categorie est requise."));
     }
 }
 ```
 
-## Mapping Extensions Pattern
+## Mapping Extensions Pattern (Backend Layer)
 
 ```csharp
 namespace HelloGrpc.Backend.Extensions;
 
 /// <summary>
-/// Extensions de mapping entre entités et messages protobuf.
+/// Extensions de mapping entre entites (Data) et messages protobuf (Shared).
 /// </summary>
 public static class MappingExtensions
 {
@@ -172,7 +171,19 @@ public static class MappingExtensions
 ## Error Handling
 
 Always use `RpcException` with appropriate `StatusCode`:
-- `NotFound` — entity doesn't exist
-- `InvalidArgument` — validation failure
-- `AlreadyExists` — duplicate constraint violation
-- `Internal` — unexpected errors (wrap in try-catch at service level)
+- `NotFound` --- entity doesn't exist
+- `InvalidArgument` --- validation failure
+- `AlreadyExists` --- duplicate constraint violation
+- `Internal` --- unexpected errors (wrap in try-catch at service level)
+
+## Layer Interaction
+
+```
+Frontend --gRPC--> Backend.Services.PersonalityService
+                       |
+                       +--> Backend.Extensions.MappingExtensions (proto <-> entity)
+                       |
+                       +--> Service.PersonalityService (CRUD business logic)
+                                |
+                                +--> Data.AppDbContext (EF Core SQLite)
+```

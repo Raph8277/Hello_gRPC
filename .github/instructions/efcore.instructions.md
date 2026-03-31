@@ -1,9 +1,14 @@
-﻿---
-description: "Use when writing EF Core entities, DbContext, migrations, database configuration, SQLite setup, seed data, and data access code."
-applyTo: ["**/Data/**", "**/Entities/**", "**/Migrations/**"]
+---
+description: "Use when writing EF Core entities, DbContext, migrations, database configuration, SQLite setup, seed data, and data access code in the Data and Service layers."
+applyTo: ["**/Data/**", "**/Entities/**", "**/Migrations/**", "**/Service/**"]
 ---
 
 # EF Core Guidelines
+
+## Architecture
+- Entities, DbContext, migrations, and seeding live in `Hello_gRPC.Data` (namespace `HelloGrpc.Data`)
+- Business logic services live in `Hello_gRPC.Service` (namespace `HelloGrpc.Service`)
+- gRPC services in Backend delegate to the Service layer
 
 ## Entity Conventions
 - Use `required` keyword for non-nullable string properties
@@ -20,11 +25,16 @@ applyTo: ["**/Data/**", "**/Entities/**", "**/Migrations/**"]
 
 ## Migrations
 ```bash
-dotnet ef migrations add <Name> --project src/Hello_gRPC.Backend/
-dotnet ef database update --project src/Hello_gRPC.Backend/
+dotnet ef migrations add <Name> --project src/Hello_gRPC.Data/ --startup-project src/Hello_gRPC.Backend/
+dotnet ef database update --project src/Hello_gRPC.Data/ --startup-project src/Hello_gRPC.Backend/
 ```
 
 ## Seeding
 - Check `AnyAsync()` before seeding to avoid duplicates
 - Call `Database.MigrateAsync()` at startup before seeding
-- Use the `DatabaseSeeder.SeedAsync()` static method
+- Use the `DatabaseSeeder.SeedAsync()` static method in `HelloGrpc.Data`
+
+## Service Layer
+- `{Entity}Service` with primary constructor injecting `AppDbContext`
+- Async CRUD methods: `GetAllAsync`, `GetByIdAsync`, `AddAsync`, `UpdateAsync`, `DeleteAsync`
+- DI registration via extension methods in `ServiceCollectionExtensions`

@@ -1,6 +1,6 @@
-﻿---
+---
 name: seed-data
-description: "Use when seeding the SQLite database with the initial 100 personalities. Use for generating, modifying, or extending seed data. Covers categories: Science, Art, Politique, Sport, Littérature, Musique, Cinéma, Philosophie, Histoire, Technologie."
+description: "Use when seeding the SQLite database with the initial 100 personalities. Use for generating, modifying, or extending seed data in the Data layer (Hello_gRPC.Data). Covers categories: Science, Art, Politique, Sport, Litterature, Musique, Cinema, Philosophie, Histoire, Technologie."
 argument-hint: "Describe what seed data to generate or modify"
 ---
 
@@ -10,6 +10,20 @@ argument-hint: "Describe what seed data to generate or modify"
 - Generating initial seed data for the 100 personalities
 - Adding or modifying personality entries
 - Changing categories or data structure
+
+## Architecture
+
+Seed data is managed in the **Data layer**:
+
+```
+Hello_gRPC.Data/
++-- DatabaseSeeder.cs                # Static SeedAsync method
++-- Entities/
+|   +-- Personality.cs               # Entity definition
++-- AppDbContext.cs                   # DbContext with Personalities DbSet
+```
+
+**Namespace**: `HelloGrpc.Data`
 
 ## Data Structure
 
@@ -29,12 +43,12 @@ Each personality has:
 | Science | Einstein, Curie, Newton, Darwin, Pasteur... |
 | Art | Picasso, Da Vinci, Van Gogh, Monet, Frida Kahlo... |
 | Politique | De Gaulle, Mandela, Lincoln, Churchill, Merkel... |
-| Sport | Pelé, Ali, Bolt, Serena Williams, Zidane... |
-| Littérature | Hugo, Shakespeare, Tolstoï, Austen, García Márquez... |
+| Sport | Pele, Ali, Bolt, Serena Williams, Zidane... |
+| Litterature | Hugo, Shakespeare, Tolstoi, Austen, Garcia Marquez... |
 | Musique | Mozart, Beethoven, Beatles, Piaf, Bob Marley... |
-| Cinéma | Chaplin, Hitchcock, Kubrick, Miyazaki, Meryl Streep... |
+| Cinema | Chaplin, Hitchcock, Kubrick, Miyazaki, Meryl Streep... |
 | Philosophie | Socrate, Descartes, Kant, Simone de Beauvoir, Confucius... |
-| Histoire | César, Cléopâtre, Napoléon, Jeanne d'Arc, Alexandre le Grand... |
+| Histoire | Cesar, Cleopatre, Napoleon, Jeanne d'Arc, Alexandre le Grand... |
 | Technologie | Turing, Jobs, Berners-Lee, Ada Lovelace, Elon Musk... |
 
 ## Procedure
@@ -42,9 +56,11 @@ Each personality has:
 ### 1. Generate Seed Data
 Reference the full dataset in [personalities.json](./assets/personalities.json).
 
-### 2. Database Seeder Implementation
+### 2. Database Seeder Implementation (Data Layer)
 
 ```csharp
+namespace HelloGrpc.Data;
+
 public static class DatabaseSeeder
 {
     public static async Task SeedAsync(AppDbContext context)
@@ -70,6 +86,6 @@ public static class DatabaseSeeder
 
 ### 3. Validate
 ```bash
-dotnet build src/Hello_gRPC.Backend/
-# Run the app — it auto-seeds on first startup
+dotnet build src/Hello_gRPC.Data/
+# Run the app --- it auto-seeds on first startup via Program.cs in Backend
 ```
