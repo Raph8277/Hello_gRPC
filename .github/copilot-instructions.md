@@ -1,5 +1,32 @@
 # Hello_gRPC - Project Guidelines
 
+
+## Vue d'ensemble .github
+
+.github/
+├── copilot-instructions.md              # Instructions globales
+├── agents/
+│   └── blazor-grpc-fullstack.agent.md   # Agent personnalisé
+├── instructions/
+│   ├── blazor.instructions.md           # Instructions contextuelles Blazor
+│   ├── efcore.instructions.md           # Instructions contextuelles EF Core
+│   └── proto.instructions.md            # Instructions contextuelles Proto
+├── prompts/
+│   ├── init-project.prompt.md           # Prompt : initialiser le projet
+│   ├── scaffold-entity.prompt.md        # Prompt : scaffolder une entité
+│   ├── add-grpc-method.prompt.md        # Prompt : ajouter une méthode gRPC
+│   ├── add-mudblazor-page.prompt.md     # Prompt : ajouter une page MudBlazor
+│   └── generate-c4-docs.prompt.md       # Prompt : générer la doc C4
+└── skills/
+    ├── blazor-frontend/                 # Skill : frontend Blazor
+    ├── grpc-backend/                    # Skill : backend gRPC
+    ├── proto-definitions/               # Skill : fichiers .proto
+    ├── c4-documentation/                # Skill : documentation C4
+    └── seed-data/                       # Skill : données de seed
+
+
+
+
 ## Architecture
 
 Ce projet est une application CRUD fullstack avec une **architecture en couches** :
@@ -73,3 +100,11 @@ dotnet test
 - Gestion d'erreurs gRPC via `RpcException` avec `StatusCode` appropries
 - Les pages Blazor utilisent `@inject` pour les services gRPC client
 - Extensions DI dans la couche Service (`AddHelloGrpcAppContext`, `AddHelloGrpc{Entity}Service`)
+
+
+
+
+
+
+
+
